@@ -7,8 +7,13 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+
+   
     
-    <div className="bg-red-500">Veloura</div>
+    <div className="bg-red-500 w-[100px]">Veloura</div>
+
+    
+    
    
   )
 }
