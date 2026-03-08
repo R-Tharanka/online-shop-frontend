@@ -2,6 +2,7 @@ import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import AboutUs from './pages/aboutUs';
+import ContactUs from './pages/contactUs';
 
 function HomePage() {
   return (
@@ -27,17 +28,6 @@ function OrdersPage() {
   );
 }
 
-function ContactPage() {
-  return (
-    <main className="min-h-[calc(100vh-88px)] bg-[#FBFBFB] px-4 sm:px-6 lg:px-8 py-14">
-      <section className="max-w-6xl mx-auto rounded-3xl bg-white border border-slate-200 p-8 md:p-12 shadow-sm">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Contact Us</h1>
-        <p className="mt-3 text-slate-600">Need help? Reach out and our support team will assist you quickly.</p>
-      </section>
-    </main>
-  );
-}
-
 function LoginPage() {
   return (
     <main className="min-h-[calc(100vh-88px)] bg-[#FBFBFB] px-4 sm:px-6 lg:px-8 py-14">
@@ -57,7 +47,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/contact" element={<ContactUs />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
