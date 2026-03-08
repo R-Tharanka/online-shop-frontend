@@ -68,7 +68,7 @@ export default function ContactUs() {
 			setFormData(initialForm);
 		} catch (error) {
 			setSubmitError(
-				'Unable to send your message right now. Please verify the backend is running at http://localhost:3002/api/contact.'
+				'Unable to send your message right now'
 			);
 		} finally {
 			setIsSubmitting(false);
@@ -106,7 +106,7 @@ export default function ContactUs() {
 					className="rounded-3xl bg-white border border-slate-200 shadow-xl p-6 md:p-8"
 				>
 					<h2 className="text-2xl font-bold text-slate-900">Send a Message</h2>
-					<p className="mt-2 text-sm text-slate-600">Fields marked with * are required.</p>
+
 
 					<div className="mt-6 grid sm:grid-cols-2 gap-4">
 						<label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
