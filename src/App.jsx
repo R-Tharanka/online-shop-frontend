@@ -14,6 +14,7 @@ function App() {
         <Route path="*" element={<Navigate to="/products" replace />} />
       </Routes>
     </BrowserRouter>
+
   )
 }
 
