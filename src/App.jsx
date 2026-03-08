@@ -10,7 +10,7 @@ function App() {
 
    
     
-    <div className="bg-red-500 w-[100px]">Veloura</div>
+    <div className="bg-red-500 ">Veloura</div>
 
     
     
