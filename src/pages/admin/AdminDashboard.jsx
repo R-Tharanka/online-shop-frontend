@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Sidebar from "../Components/Admin/Sidebar";
-import StatsBar from "../Components/ProductService/StatsBar";
-import ProductCard from "../Components/ProductService/ProductCard";
-import ProductForm from "../Components/ProductService/ProductForm";
-import ConfirmModal from "../Components/ProductService/ConfirmModal";
-import Toast from "../Components/ProductService/Toast";
-import UserManagement from "../Components/Admin/UserManagement";
-import { getTokens } from "../Components/Auth/authStorage";
-import * as authApi from "../Components/Auth/authApi";
+import Sidebar from "../../Components/Admin/Sidebar";
+import StatsBar from "../../Components/ProductService/StatsBar";
+import ProductCard from "../../Components/ProductService/ProductCard";
+import ProductForm from "../../Components/ProductService/ProductForm";
+import ConfirmModal from "../../Components/ProductService/ConfirmModal";
+import Toast from "../../Components/ProductService/Toast";
+import UserManagement from "../../Components/Admin/UserManagement";
+import { getTokens } from "../../Components/Auth/authStorage";
+import * as authApi from "../../Components/Auth/authApi";
 
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
 const AUTH_BASE_URL =
@@ -28,7 +28,7 @@ const initialForm = {
   imageUrl: "",
 };
 
-export default function ProductServiceAdmin() {
+export default function AdminDashboard() {
   const [section, setSection] = useState("products");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
