@@ -94,22 +94,6 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
           padding: "0 24px",
         }}
       >
-        {/* <div
-          style={{
-            padding: "14px 16px",
-            borderRadius: 16,
-            background: "rgba(95, 68, 255, 0.08)",
-            border: "1px solid rgba(95, 68, 255, 0.2)",
-            color: "#1f1b2e",
-            fontSize: 12,
-            lineHeight: 1.5,
-          }}
-        >
-          <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 2, color: "rgba(31,27,46,.6)", marginBottom: 6 }}>
-            Message
-          </div>
-          Keep roles accurate to avoid access issues. Updates take effect immediately.
-        </div> */}
       </div>
 
       <div
