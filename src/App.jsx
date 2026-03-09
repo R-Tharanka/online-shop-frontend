@@ -4,6 +4,7 @@ import './App.css';
 import Cart from './pages/orders/Cart';
 import Checkout from './pages/orders/Checkout';
 import OrderDetails from './pages/orders/OrderDetails';
+import ContactUs from './pages/marketing/contactUs';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProductUserItem from './pages/products/ProductUserItem';
@@ -102,6 +103,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/contact" element={<ContactUs />} />
 
           {/* Auth */}
           <Route path="/auth/login" element={<Login />} />
