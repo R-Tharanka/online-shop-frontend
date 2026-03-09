@@ -113,7 +113,7 @@ export default function TopNav() {
                   {user?.name?.slice(0, 1)?.toUpperCase() || "U"}
                 </button>
                 {profileOpen ? (
-                  <ul className="absolute left-0 mt-2 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-2 text-sm">
+                  <ul className="absolute right-0 mt-2 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-2 text-sm">
                     <li>
                       <Link
                         to="/account"
