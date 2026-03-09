@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 
@@ -25,11 +25,25 @@ export default function TopNav() {
   const canAccessAdmin = hasRole("shop_owner");
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const profileMenuRef = useRef(null);
 
   const handleNavClick = () => {
     if (menuOpen) setMenuOpen(false);
     if (profileOpen) setProfileOpen(false);
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!profileOpen) return;
+      if (!profileMenuRef.current) return;
+      if (!profileMenuRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [profileOpen]);
 
   return (
     <header className="bg-white/90 backdrop-blur border-b border-gray-100 sticky top-0 z-50">
@@ -66,7 +80,7 @@ export default function TopNav() {
 
         <div className="ml-auto flex items-center gap-2">
           {isAuthenticated ? (
-            <div className="relative hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-8">
               <button
                 type="button"
                 onClick={handleNavClick}
@@ -88,38 +102,42 @@ export default function TopNav() {
                   <path d="M13.73 21a2 2 0 01-3.46 0" />
                 </svg>
               </button>
-              <button
-                type="button"
-                onClick={() => setProfileOpen((prev) => !prev)}
-                className="h-9 w-9 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1f1b2e] hover:bg-gray-50"
-                aria-expanded={profileOpen}
-                aria-label="Open profile menu"
-              >
-                {user?.name?.slice(0, 1)?.toUpperCase() || "U"}
-              </button>
-              {profileOpen ? (
-                <div className="absolute right-0 mt-2 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-2 text-sm">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleNavClick();
-                    }}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
-                  >
-                    <NavLink to="/account">Account</NavLink>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleNavClick();
-                      logout();
-                    }}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              ) : null}
+              <div className="relative" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen((prev) => !prev)}
+                  className="h-9 w-9 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1f1b2e] hover:bg-gray-50"
+                  aria-expanded={profileOpen}
+                  aria-label="Open profile menu"
+                >
+                  {user?.name?.slice(0, 1)?.toUpperCase() || "U"}
+                </button>
+                {profileOpen ? (
+                  <ul className="absolute left-0 mt-2 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-2 text-sm">
+                    <li>
+                      <Link
+                        to="/account"
+                        onClick={handleNavClick}
+                        className="block w-full px-4 py-2 text-gray-700 hover:bg-gray-50"
+                      >
+                        Account
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleNavClick();
+                          logout();
+                        }}
+                        className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
+                      >
+                        Sign out
+                      </button>
+                    </li>
+                  </ul>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
