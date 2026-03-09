@@ -74,3 +74,45 @@ export const getMe = (accessToken) =>
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
+export const listUsers = ({ accessToken, search = "", role = "", page = 1, limit = 20 }) => {
+  const params = new URLSearchParams();
+  if (search) params.set("search", search);
+  if (role) params.set("role", role);
+  if (page) params.set("page", String(page));
+  if (limit) params.set("limit", String(limit));
+  const query = params.toString() ? `?${params.toString()}` : "";
+
+  return jsonFetch(`/users${query}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const getUserById = ({ accessToken, userId }) =>
+  jsonFetch(`/users/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+export const addRole = ({ accessToken, userId, role }) =>
+  jsonFetch(`/users/${userId}/roles`, {
+    method: "POST",
+    body: JSON.stringify({ role }),
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+export const removeRole = ({ accessToken, userId, role }) =>
+  jsonFetch(`/users/${userId}/roles`, {
+    method: "DELETE",
+    body: JSON.stringify({ role }),
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });

@@ -5,6 +5,7 @@ import ProductCard from "../Components/ProductService/ProductCard";
 import ProductForm from "../Components/ProductService/ProductForm";
 import ConfirmModal from "../Components/ProductService/ConfirmModal";
 import Toast from "../Components/ProductService/Toast";
+import UserManagement from "../Components/Admin/UserManagement";
 
 const API_BASE = "http://localhost:5002/api/products";
 
@@ -22,6 +23,7 @@ const initialForm = {
 };
 
 export default function ProductServiceAdmin() {
+  const [section, setSection] = useState("products");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -148,7 +150,11 @@ export default function ProductServiceAdmin() {
         button:hover { opacity: .9; }
       `}</style>
 
-      <Sidebar />
+      <Sidebar
+        activeSection={section}
+        onSelect={setSection}
+        apiBase={section === "users" ? "http://localhost:5000/api/auth" : API_BASE}
+      />
 
       <div style={{ marginLeft: 220, padding: "40px 40px" }}>
 
@@ -156,139 +162,170 @@ export default function ProductServiceAdmin() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 36 }}>
           <div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: "#1a002e", margin: 0, letterSpacing: -1 }}>
-              Product Catalogue
+              Admin Dashboard
             </h1>
             <p style={{ color: "#999", fontSize: 12, margin: "6px 0 0", letterSpacing: 1 }}>
-              Manage your product inventory
+              Manage products and users in one place
             </p>
           </div>
-          <button onClick={openCreate} style={{
-            background: "linear-gradient(135deg, #8200db, #b44fff)",
-            color: "#fff", border: "none", borderRadius: 12, padding: "14px 28px",
-            cursor: "pointer", fontSize: 13, fontFamily: "'DM Mono', monospace",
-            fontWeight: 700, boxShadow: "0 6px 24px rgba(130,0,219,.4)",
-            display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{ fontSize: 16 }}>+</span> New Product
-          </button>
-        </div>
-
-        <StatsBar products={products} />
-
-        {/* toolbar */}
-        <div style={{ display: "flex", gap: 12, marginBottom: 28, alignItems: "center" }}>
-          <div style={{ flex: 1, position: "relative" }}>
-            <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, opacity: .5 }}>🔍</span>
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search products, brands, categories…"
-              style={{
-                width: "100%", padding: "11px 14px 11px 40px", borderRadius: 10,
-                border: "1.5px solid #e8e0f7", fontSize: 13, background: "#fff",
-                outline: "none", fontFamily: "'DM Mono', monospace",
-              }}
-            />
-          </div>
-          <button onClick={fetchProducts} style={{
-            padding: "11px 18px", borderRadius: 10, border: "1.5px solid #e8e0f7",
-            background: "#fff", cursor: "pointer", fontSize: 13,
-          }}>
-            ↻ Refresh
-          </button>
-          <div style={{ display: "flex", border: "1.5px solid #e8e0f7", borderRadius: 10, overflow: "hidden" }}>
-            {["grid", "list"].map(v => (
-              <button key={v} onClick={() => setView(v)} style={{
-                padding: "10px 14px", border: "none",
-                background: view === v ? "#8200db" : "#fff",
-                color: view === v ? "#fff" : "#666",
-                cursor: "pointer", fontSize: 14,
-              }}>
-                {v === "grid" ? "⊞" : "☰"}
+          <div style={{ display: "flex", gap: 10 }}>
+            {[
+              { key: "products", label: "Products" },
+              { key: "users", label: "Users" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                onClick={() => setSection(item.key)}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: 10,
+                  border: section === item.key ? "1.5px solid #111827" : "1.5px solid #e5e7eb",
+                  background: section === item.key ? "#111827" : "#fff",
+                  color: section === item.key ? "#fff" : "#111827",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontFamily: "'DM Mono', monospace",
+                }}
+              >
+                {item.label}
               </button>
             ))}
+            {section === "products" && (
+              <button onClick={openCreate} style={{
+                background: "linear-gradient(135deg, #8200db, #b44fff)",
+                color: "#fff", border: "none", borderRadius: 12, padding: "14px 24px",
+                cursor: "pointer", fontSize: 13, fontFamily: "'DM Mono', monospace",
+                fontWeight: 700, boxShadow: "0 6px 24px rgba(130,0,219,.4)",
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                <span style={{ fontSize: 16 }}>+</span> New Product
+              </button>
+            )}
           </div>
         </div>
 
-        {/* product list */}
-        {fetching ? (
-          <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: "50%",
-              border: "3px solid #e8e0f7", borderTopColor: "#8200db",
-              animation: "spin 1s linear infinite", margin: "0 auto 16px",
-            }} />
-            <p style={{ color: "#999", fontSize: 13 }}>Loading products…</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "80px 0", color: "#999" }}>
-            <div style={{ fontSize: 56, marginBottom: 16 }}>📭</div>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#1a002e", marginBottom: 8 }}>
-              No products found
-            </p>
-            <p style={{ fontSize: 13 }}>
-              {search ? "Try a different search term" : "Create your first product to get started"}
-            </p>
-          </div>
-        ) : view === "grid" ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
-            {filtered.map(p => (
-              <ProductCard key={p._id} product={p} onEdit={openEdit} onDelete={setDeleteTarget} />
-            ))}
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {filtered.map(p => (
-              <div key={p._id} style={{
-                background: "#fff", borderRadius: 12, padding: "16px 20px",
-                border: "1px solid #f0e8fc", display: "flex", alignItems: "center", gap: 20,
-              }}>
-                <div style={{
-                  width: 52, height: 52, borderRadius: 10,
-                  background: "linear-gradient(135deg, #f3e8ff, #e8f9ff)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 22, flexShrink: 0, overflow: "hidden",
-                }}>
-                  {p.imageUrl
-                    ? <img src={p.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
-                    : "📦"}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: "#1a002e", marginBottom: 2 }}>
-                    {p.productName}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#999", marginBottom: 4 }}>{p.brand} · {p.category}</div>
-                  {p.size?.length > 0 && (
-                    <div style={{ display: "flex", gap: 4 }}>
-                      {p.size.map(s => (
-                        <span key={s} style={{
-                          fontSize: 10, border: "1px solid #e0d0f7",
-                          borderRadius: 4, padding: "1px 6px", color: "#8200db",
-                          fontFamily: "'DM Mono', monospace",
-                        }}>{s}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#8200db", fontWeight: 700, minWidth: 80, textAlign: "right" }}>
-                  Rs.{Number(p.price).toFixed(2)}
-                </div>
-                <div style={{ fontSize: 11, color: p.stockQuantity > 0 ? "#22c55e" : "#ef4444", minWidth: 80, textAlign: "center" }}>
-                  {p.stockQuantity} units
-                </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button onClick={() => openEdit(p)} style={{ padding: "7px 14px", borderRadius: 7, border: "1.5px solid #e0d0f7", background: "#fff", color: "#8200db", cursor: "pointer", fontSize: 12 }}>Edit</button>
-                  <button onClick={() => setDeleteTarget(p)} style={{ padding: "7px 14px", borderRadius: 7, border: "1.5px solid #ffd0d8", background: "#fff", color: "#ff3a5e", cursor: "pointer", fontSize: 12 }}>Delete</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {section === "products" ? (
+          <>
+            <StatsBar products={products} />
 
-        {filtered.length > 0 && (
-          <p style={{ textAlign: "center", color: "#bbb", fontSize: 11, marginTop: 28, letterSpacing: 1, textTransform: "uppercase" }}>
-            Showing {filtered.length} of {products.length} products
-          </p>
+            {/* toolbar */}
+            <div style={{ display: "flex", gap: 12, marginBottom: 28, alignItems: "center" }}>
+              <div style={{ flex: 1, position: "relative" }}>
+                <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, opacity: .5 }}>🔍</span>
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search products, brands, categories…"
+                  style={{
+                    width: "100%", padding: "11px 14px 11px 40px", borderRadius: 10,
+                    border: "1.5px solid #e8e0f7", fontSize: 13, background: "#fff",
+                    outline: "none", fontFamily: "'DM Mono', monospace",
+                  }}
+                />
+              </div>
+              <button onClick={fetchProducts} style={{
+                padding: "11px 18px", borderRadius: 10, border: "1.5px solid #e8e0f7",
+                background: "#fff", cursor: "pointer", fontSize: 13,
+              }}>
+                ↻ Refresh
+              </button>
+              <div style={{ display: "flex", border: "1.5px solid #e8e0f7", borderRadius: 10, overflow: "hidden" }}>
+                {["grid", "list"].map(v => (
+                  <button key={v} onClick={() => setView(v)} style={{
+                    padding: "10px 14px", border: "none",
+                    background: view === v ? "#8200db" : "#fff",
+                    color: view === v ? "#fff" : "#666",
+                    cursor: "pointer", fontSize: 14,
+                  }}>
+                    {v === "grid" ? "⊞" : "☰"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* product list */}
+            {fetching ? (
+              <div style={{ textAlign: "center", padding: "80px 0" }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: "50%",
+                  border: "3px solid #e8e0f7", borderTopColor: "#8200db",
+                  animation: "spin 1s linear infinite", margin: "0 auto 16px",
+                }} />
+                <p style={{ color: "#999", fontSize: 13 }}>Loading products…</p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px 0", color: "#999" }}>
+                <div style={{ fontSize: 56, marginBottom: 16 }}>📭</div>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#1a002e", marginBottom: 8 }}>
+                  No products found
+                </p>
+                <p style={{ fontSize: 13 }}>
+                  {search ? "Try a different search term" : "Create your first product to get started"}
+                </p>
+              </div>
+            ) : view === "grid" ? (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
+                {filtered.map(p => (
+                  <ProductCard key={p._id} product={p} onEdit={openEdit} onDelete={setDeleteTarget} />
+                ))}
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {filtered.map(p => (
+                  <div key={p._id} style={{
+                    background: "#fff", borderRadius: 12, padding: "16px 20px",
+                    border: "1px solid #f0e8fc", display: "flex", alignItems: "center", gap: 20,
+                  }}>
+                    <div style={{
+                      width: 52, height: 52, borderRadius: 10,
+                      background: "linear-gradient(135deg, #f3e8ff, #e8f9ff)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 22, flexShrink: 0, overflow: "hidden",
+                    }}>
+                      {p.imageUrl
+                        ? <img src={p.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
+                        : "📦"}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: "#1a002e", marginBottom: 2 }}>
+                        {p.productName}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#999", marginBottom: 4 }}>{p.brand} · {p.category}</div>
+                      {p.size?.length > 0 && (
+                        <div style={{ display: "flex", gap: 4 }}>
+                          {p.size.map(s => (
+                            <span key={s} style={{
+                              fontSize: 10, border: "1px solid #e0d0f7",
+                              borderRadius: 4, padding: "1px 6px", color: "#8200db",
+                              fontFamily: "'DM Mono', monospace",
+                            }}>{s}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#8200db", fontWeight: 700, minWidth: 80, textAlign: "right" }}>
+                      Rs.{Number(p.price).toFixed(2)}
+                    </div>
+                    <div style={{ fontSize: 11, color: p.stockQuantity > 0 ? "#22c55e" : "#ef4444", minWidth: 80, textAlign: "center" }}>
+                      {p.stockQuantity} units
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button onClick={() => openEdit(p)} style={{ padding: "7px 14px", borderRadius: 7, border: "1.5px solid #e0d0f7", background: "#fff", color: "#8200db", cursor: "pointer", fontSize: 12 }}>Edit</button>
+                      <button onClick={() => setDeleteTarget(p)} style={{ padding: "7px 14px", borderRadius: 7, border: "1.5px solid #ffd0d8", background: "#fff", color: "#ff3a5e", cursor: "pointer", fontSize: 12 }}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {filtered.length > 0 && (
+              <p style={{ textAlign: "center", color: "#bbb", fontSize: 11, marginTop: 28, letterSpacing: 1, textTransform: "uppercase" }}>
+                Showing {filtered.length} of {products.length} products
+              </p>
+            )}
+          </>
+        ) : (
+          <UserManagement addToast={addToast} />
         )}
       </div>
 

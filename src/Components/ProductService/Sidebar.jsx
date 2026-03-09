@@ -1,6 +1,12 @@
-const API_BASE = "http://localhost:5002/api/products";
+const PRODUCT_API_BASE = "http://localhost:5002/api/products";
 
-export default function Sidebar() {
+export default function Sidebar({ activeSection = "products", onSelect, apiBase }) {
+  const items = [
+    { key: "products", icon: "📦", label: "Products" },
+    { key: "users", icon: "👥", label: "Users" },
+  ];
+  const resolvedApiBase = apiBase || PRODUCT_API_BASE;
+
   return (
     <div style={{
       position: "fixed", left: 0, top: 0, bottom: 0, width: 220,
@@ -16,24 +22,32 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {[
-        { icon: "📦", label: "Products", active: true },
-      ].map(item => (
-        <div key={item.label} style={{
+      {items.map(item => {
+        const active = activeSection === item.key;
+        return (
+        <button
+          type="button"
+          key={item.label}
+          onClick={() => onSelect && onSelect(item.key)}
+          style={{
           padding: "12px 24px", margin: "2px 12px", borderRadius: 10, cursor: "pointer",
-          background: item.active ? "rgba(130,0,219,.4)" : "transparent",
-          borderLeft: item.active ? "3px solid #b44fff" : "3px solid transparent",
-          color: item.active ? "#fff" : "rgba(255,255,255,.5)",
+          background: active ? "rgba(130,0,219,.4)" : "transparent",
+          borderLeft: active ? "3px solid #b44fff" : "3px solid transparent",
+          color: active ? "#fff" : "rgba(255,255,255,.5)",
           fontSize: 13, display: "flex", alignItems: "center", gap: 10,
           transition: "all .2s",
+          width: "calc(100% - 24px)",
+          border: "none",
+          textAlign: "left",
         }}>
           <span>{item.icon}</span>{item.label}
-        </div>
-      ))}
+        </button>
+      );
+      })}
 
       <div style={{ marginTop: "auto", padding: "24px", borderTop: "1px solid rgba(255,255,255,.08)" }}>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>API</div>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,.5)", wordBreak: "break-all" }}>{API_BASE}</div>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.5)", wordBreak: "break-all" }}>{resolvedApiBase}</div>
       </div>
     </div>
   );
