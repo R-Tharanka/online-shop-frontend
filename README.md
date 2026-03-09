@@ -1,16 +1,64 @@
-# React + Vite
+# Veloura Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Customer-facing frontend for the Veloura online clothing store. Built with React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 + React Router
+- Vite 7 + SWC
+- Tailwind CSS 4
 
-## React Compiler
+## Features
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- Product catalog and details
+- Cart and checkout flow
+- Order details view
+- Contact us page
+- Authentication (login, register, password reset)
+- Admin dashboard for shop owners
 
-## Expanding the ESLint configuration
+## Routes
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `/products` - product list
+- `/products/:id` - product details
+- `/cart` - cart view
+- `/checkout` - checkout (protected)
+- `/order-details` - order history (protected)
+- `/contact` - contact page
+- `/auth/login` - login
+- `/auth/register` - register
+- `/auth/forgot` - request password reset
+- `/auth/reset` - reset password
+- `/account` - profile (protected)
+- `/admin` - admin dashboard (role: `shop_owner`)
+
+## Environment
+
+The auth API base URL is configurable via Vite envs:
+
+```
+VITE_AUTH_API_BASE=http://localhost:5000/api/auth
+```
+
+If not set, the app defaults to `http://localhost:5000/api/auth`.
+
+## Scripts
+
+```
+npm run dev      # start dev server
+npm run build    # production build
+npm run preview  # preview build output
+npm run lint     # eslint
+```
+
+## Local Development
+
+1. Install dependencies: `npm install`
+2. Create `.env` with `VITE_AUTH_API_BASE` if needed
+3. Start dev server: `npm run dev`
+
+## Project Structure
+
+- `src/Components/Auth` - auth provider, API helpers, storage
+- `src/Components/Navigation` - top navigation
+- `src/pages` - feature pages (auth, products, orders, admin, marketing)
