@@ -56,7 +56,11 @@ export default function Profile() {
                 {(user.roles || ["customer"]).map((role) => (
                   <span
                     key={role}
-                    className="px-3 py-1 rounded-full text-xs bg-[#f3f0ff] text-[#1f1b2e] border border-[#e2dbff]"
+                    className="px-3 py-1 rounded-full text-xs text-[#1f1b2e]"
+                    style={{
+                      backgroundColor: "rgba(218, 171, 45, 0.12)",
+                      border: "1px solid rgba(218, 171, 45, 0.35)",
+                    }}
                   >
                     {role}
                   </span>

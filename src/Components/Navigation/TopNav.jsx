@@ -9,9 +9,9 @@ function NavLink({ to, children }) {
   return (
     <Link
       to={to}
-      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent ${
         active
-          ? "bg-[#1f1b2e] text-white"
+          ? "bg-[#1f1b2e] text-white border-[color:var(--color-secondary)]"
           : "text-gray-600 hover:text-[#1f1b2e] hover:bg-gray-100"
       }`}
     >
@@ -29,9 +29,13 @@ export default function TopNav() {
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link
           to="/"
-          className="text-2xl font-semibold text-[#1f1b2e] tracking-tight"
+          className="text-2xl font-semibold text-[#1f1b2e] tracking-tight flex items-center gap-2"
         >
           Veloura
+          <span
+            className="inline-flex h-2 w-2 rounded-full"
+            style={{ backgroundColor: "var(--color-secondary)" }}
+          />
         </Link>
 
         <nav className="flex flex-wrap items-center gap-2">
