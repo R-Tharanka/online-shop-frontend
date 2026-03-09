@@ -117,7 +117,11 @@ export default function ContactUs() {
 						<button
 							type="submit"
 							disabled={loading}
-							className="w-full sm:w-auto rounded-xl bg-[#1f1b2e] text-white px-6 py-3 text-sm font-semibold hover:bg-[#2c2740] transition disabled:opacity-60"
+							className={`w-full sm:w-auto rounded-xl px-6 py-3 text-sm font-semibold transition disabled:opacity-60 focus:outline-none focus:ring-2 ${
+								loading
+									? "bg-[color:var(--color-secondary)] text-[#1f1b2e]"
+									: "bg-[#1f1b2e] text-white hover:bg-[#2c2740]"
+							}`}
 						>
 							{loading ? "Sending..." : "Send message"}
 						</button>
