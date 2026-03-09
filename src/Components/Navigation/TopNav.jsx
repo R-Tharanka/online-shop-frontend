@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 
@@ -23,6 +23,11 @@ function NavLink({ to, children }) {
 export default function TopNav() {
   const { isAuthenticated, logout, hasRole } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleNavClick = () => {
+    if (menuOpen) setMenuOpen(false);
+  };
 
   return (
     <header className="bg-white/90 backdrop-blur border-b border-gray-100 sticky top-0 z-50">
@@ -38,32 +43,79 @@ export default function TopNav() {
           />
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-2">
-          <NavLink to="/products">Products</NavLink>
-          <NavLink to="/cart">Cart</NavLink>
-          <NavLink to="/checkout">Checkout</NavLink>
-          <NavLink to="/order-details">Orders</NavLink>
-          <NavLink to="/contact">Contact</NavLink>
-          {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
+        <div className="flex items-center gap-3">
+          <nav className="hidden md:flex flex-wrap items-center gap-2">
+            <NavLink to="/products">Products</NavLink>
+            <NavLink to="/cart">Cart</NavLink>
+            <NavLink to="/checkout">Checkout</NavLink>
+            <NavLink to="/order-details">Orders</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
 
-          {isAuthenticated ? (
-            <>
-              <NavLink to="/account">Account</NavLink>
-              <button
-                onClick={logout}
-                className="px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <>
-              <NavLink to="/auth/login">Sign in</NavLink>
-              <NavLink to="/auth/register">Join</NavLink>
-            </>
-          )}
-        </nav>
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/account">Account</NavLink>
+                <button
+                  onClick={logout}
+                  className="px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/auth/login">Sign in</NavLink>
+                <NavLink to="/auth/register">Join</NavLink>
+              </>
+            )}
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="md:hidden inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            aria-expanded={menuOpen}
+            aria-label="Toggle navigation"
+          >
+            Menu
+          </button>
+        </div>
       </div>
+
+      {menuOpen ? (
+        <div className="md:hidden border-t border-gray-100 bg-white/95">
+          <nav className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-2">
+            <div onClick={handleNavClick}><NavLink to="/products">Products</NavLink></div>
+            <div onClick={handleNavClick}><NavLink to="/cart">Cart</NavLink></div>
+            <div onClick={handleNavClick}><NavLink to="/checkout">Checkout</NavLink></div>
+            <div onClick={handleNavClick}><NavLink to="/order-details">Orders</NavLink></div>
+            <div onClick={handleNavClick}><NavLink to="/contact">Contact</NavLink></div>
+            {canAccessAdmin ? (
+              <div onClick={handleNavClick}><NavLink to="/admin">Admin</NavLink></div>
+            ) : null}
+
+            {isAuthenticated ? (
+              <>
+                <div onClick={handleNavClick}><NavLink to="/account">Account</NavLink></div>
+                <button
+                  onClick={() => {
+                    handleNavClick();
+                    logout();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <div onClick={handleNavClick}><NavLink to="/auth/login">Sign in</NavLink></div>
+                <div onClick={handleNavClick}><NavLink to="/auth/register">Join</NavLink></div>
+              </>
+            )}
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 }

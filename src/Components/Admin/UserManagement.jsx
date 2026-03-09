@@ -124,7 +124,17 @@ export default function UserManagement({ addToast }) {
   const canPageForward = page < totalPages;
 
   return (
-    <div>
+    <div className="user-management">
+      <style>{`
+        .user-management * { box-sizing: border-box; }
+        @media (max-width: 1100px) {
+          .user-management-grid { grid-template-columns: 1fr !important; }
+          .user-management-search { flex-wrap: wrap; }
+          .user-management-search > * { flex: 1 1 180px; }
+          .user-management-lookup { flex-direction: column; }
+          .user-management-lookup button { width: 100%; }
+        }
+      `}</style>
       <div
         style={{
           display: "flex",
@@ -164,6 +174,7 @@ export default function UserManagement({ addToast }) {
       </div>
 
       <div
+        className="user-management-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "2fr 1fr",
@@ -171,7 +182,11 @@ export default function UserManagement({ addToast }) {
         }}
       >
         <div>
-          <form onSubmit={handleSearch} style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+          <form
+            onSubmit={handleSearch}
+            className="user-management-search"
+            style={{ display: "flex", gap: 12, marginBottom: 16 }}
+          >
             <input
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
@@ -381,7 +396,11 @@ export default function UserManagement({ addToast }) {
             <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>
               Find user by ID
             </div>
-            <form onSubmit={handleLookup} style={{ display: "flex", gap: 8 }}>
+            <form
+              onSubmit={handleLookup}
+              className="user-management-lookup"
+              style={{ display: "flex", gap: 8 }}
+            >
               <input
                 value={lookupId}
                 onChange={(event) => setLookupId(event.target.value)}

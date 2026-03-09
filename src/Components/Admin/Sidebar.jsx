@@ -1,7 +1,7 @@
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
 const TOP_NAV_HEIGHT = 80;
 
-export default function Sidebar({ activeSection = "products", onSelect, apiBase }) {
+export default function Sidebar({ activeSection = "products", onSelect, apiBase, isOpen = false, onClose }) {
   const items = [
     { key: "products", label: "Products" },
     { key: "orders", label: "Orders" },
@@ -12,26 +12,57 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
   const resolvedApiBase = apiBase || PRODUCT_API_BASE;
 
   return (
-    <aside
-      style={{
-        position: "fixed",
-        left: 0,
-        top: TOP_NAV_HEIGHT,
-        height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
-        width: 260,
-        borderRadius: 0,
-        background:
-          "linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(247,248,255,0.9) 60%, rgba(240,243,255,0.95) 100%)",
-        borderRight: "1px solid rgba(31,27,46,0.08)",
-        boxShadow: "0 10px 30px rgba(31, 27, 46, 0.06)",
-        padding: "28px 0",
-        display: "flex",
-        flexDirection: "column",
-        zIndex: 100,
-        overflow: "hidden",
-        backdropFilter: "blur(12px)",
-      }}
-    >
+    <>
+      {isOpen ? (
+        <button
+          type="button"
+          className="admin-sidebar-overlay"
+          aria-label="Close sidebar"
+          onClick={() => onClose && onClose()}
+        />
+      ) : null}
+      <aside
+        className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""}`}
+        style={{
+          position: "fixed",
+          left: 0,
+          top: TOP_NAV_HEIGHT,
+          height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
+          width: 260,
+          borderRadius: 0,
+          background:
+            "linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(247,248,255,0.9) 60%, rgba(240,243,255,0.95) 100%)",
+          borderRight: "1px solid rgba(31,27,46,0.08)",
+          boxShadow: "0 10px 30px rgba(31, 27, 46, 0.06)",
+          padding: "28px 0",
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 100,
+          overflow: "hidden",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <style>{`
+          .admin-sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 10, 25, 0.35);
+            border: none;
+            z-index: 99;
+          }
+          @media (max-width: 1100px) {
+            .admin-sidebar {
+              top: 0 !important;
+              height: 100vh !important;
+              transform: translateX(-100%);
+              transition: transform 0.2s ease;
+              z-index: 100;
+            }
+            .admin-sidebar--open {
+              transform: translateX(0);
+            }
+          }
+        `}</style>
       <div style={{ padding: "0 26px 26px" }}>
         <div
           style={{
@@ -125,6 +156,7 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
           {resolvedApiBase}
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

@@ -8,6 +8,7 @@ import Toast from "../../Components/ProductService/Toast";
 import UserManagement from "../../Components/Admin/UserManagement";
 import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
+import menuIcon from "../../assets/menu.png";
 
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
 const AUTH_BASE_URL =
@@ -30,6 +31,7 @@ const initialForm = {
 
 export default function AdminDashboard() {
   const [section, setSection] = useState("products");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -251,8 +253,8 @@ export default function AdminDashboard() {
     {
       key: "messages",
       label: "Messages",
-      value: messages.length,
-      helper: `${unresolvedMessages} unresolved`,
+      value: unresolvedMessages,
+      helper: `${messages.length} total`,
     },
   ]), [messages.length, products.length, unresolvedMessages, usersTotal]);
 
@@ -273,11 +275,31 @@ export default function AdminDashboard() {
         * { box-sizing: border-box; }
         input:focus, textarea:focus, select:focus { border-color: #1f1b2e !important; box-shadow: 0 0 0 3px rgba(207,194,255,.45); }
         button:hover { opacity: .96; }
+        .admin-content { margin-left: 280px; padding: 48px 56px; }
+        .admin-sidebar-toggle {
+          display: none;
+          margin-bottom: 18px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          border: 1px solid rgba(31,27,46,.15);
+          background: rgba(255,255,255,0.9);
+          font-size: 12px;
+          cursor: pointer;
+          gap: 8px;
+          align-items: center;
+        }
+        @media (max-width: 1100px) {
+          .admin-content { margin-left: 0; padding: 32px 20px; }
+          .admin-sidebar-toggle { display: inline-flex; align-items: center; }
+        }
       `}</style>
 
       <Sidebar
         activeSection={section}
-        onSelect={setSection}
+        onSelect={(next) => {
+          setSection(next);
+          setSidebarOpen(false);
+        }}
         apiBase={
           section === "users"
             ? AUTH_BASE_URL
@@ -285,9 +307,20 @@ export default function AdminDashboard() {
             ? CONTACT_API_BASE
             : PRODUCT_API_BASE
         }
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
-      <div style={{ marginLeft: 280, padding: "48px 56px" }}>
+      <div className="admin-content">
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          className="admin-sidebar-toggle"
+          aria-label="Open admin navigation"
+        >
+          <img src={menuIcon} alt="" style={{ width: 16, height: 16 }} />
+          Menu
+        </button>
 
         {/* header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
