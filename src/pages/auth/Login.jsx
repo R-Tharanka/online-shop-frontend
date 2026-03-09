@@ -20,8 +20,10 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      await login({ email, password });
-      navigate(from, { replace: true });
+      const user = await login({ email, password });
+      const roles = Array.isArray(user?.roles) ? user.roles : [];
+      const isAdmin = roles.includes("shop_owner");
+      navigate(isAdmin ? "/admin" : from, { replace: true });
     } catch (err) {
       setError(err?.message || "Login failed");
     } finally {

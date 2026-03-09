@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Sidebar from "../Components/Admin/Sidebar";
 import StatsBar from "../Components/ProductService/StatsBar";
 import ProductCard from "../Components/ProductService/ProductCard";
@@ -6,8 +6,14 @@ import ProductForm from "../Components/ProductService/ProductForm";
 import ConfirmModal from "../Components/ProductService/ConfirmModal";
 import Toast from "../Components/ProductService/Toast";
 import UserManagement from "../Components/Admin/UserManagement";
+import { getTokens } from "../Components/Auth/authStorage";
+import * as authApi from "../Components/Auth/authApi";
 
-const API_BASE = "http://localhost:5002/api/products";
+const PRODUCT_API_BASE = "http://localhost:5002/api/products";
+const AUTH_BASE_URL =
+  import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
+const CONTACT_API_BASE =
+  import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
 
 const initialForm = {
   productName: "",
@@ -35,6 +41,16 @@ export default function ProductServiceAdmin() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toasts, setToasts] = useState([]);
   const [view, setView] = useState("grid");
+  const [usersTotal, setUsersTotal] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+
+  const accessToken = getTokens().accessToken;
+
+  const unresolvedMessages = useMemo(
+    () => messages.filter((message) => !message.isResolved).length,
+    [messages]
+  );
 
   const addToast = useCallback((msg, type = "success") => {
     const id = Date.now();
@@ -45,7 +61,7 @@ export default function ProductServiceAdmin() {
   const fetchProducts = useCallback(async () => {
     setFetching(true);
     try {
-      const res = await fetch(API_BASE);
+      const res = await fetch(PRODUCT_API_BASE);
       const data = await res.json();
       setProducts(data);
     } catch {
@@ -55,7 +71,44 @@ export default function ProductServiceAdmin() {
     }
   }, [addToast]);
 
+  const fetchUsersSummary = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const data = await authApi.listUsers({
+        accessToken,
+        page: 1,
+        limit: 1,
+      });
+      setUsersTotal(Number(data.total || 0));
+    } catch (error) {
+      addToast(error?.message || "Failed to load users", "error");
+    }
+  }, [accessToken, addToast]);
+
+  const fetchMessages = useCallback(async () => {
+    if (!accessToken) return;
+    setMessagesLoading(true);
+    try {
+      const res = await fetch(CONTACT_API_BASE, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to load messages");
+      }
+      setMessages(Array.isArray(data) ? data : []);
+    } catch (error) {
+      addToast(error?.message || "Failed to load messages", "error");
+    } finally {
+      setMessagesLoading(false);
+    }
+  }, [accessToken, addToast]);
+
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
+  useEffect(() => { fetchUsersSummary(); }, [fetchUsersSummary]);
+  useEffect(() => { fetchMessages(); }, [fetchMessages]);
 
   const handleFormChange = (key, value) => setForm(f => ({ ...f, [key]: value }));
 
@@ -104,7 +157,7 @@ export default function ProductServiceAdmin() {
         fd.append("image", form.imageFile);
       }
 
-      const url = formMode === "create" ? API_BASE : `${API_BASE}/${editId}`;
+      const url = formMode === "create" ? PRODUCT_API_BASE : `${PRODUCT_API_BASE}/${editId}`;
       const method = formMode === "create" ? "POST" : "PUT";
 
       const res = await fetch(url, { method, body: fd });
@@ -122,7 +175,7 @@ export default function ProductServiceAdmin() {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`${API_BASE}/${deleteTarget._id}`, { method: "DELETE" });
+      const res = await fetch(`${PRODUCT_API_BASE}/${deleteTarget._id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       addToast("Product deleted");
       setDeleteTarget(null);
@@ -132,11 +185,76 @@ export default function ProductServiceAdmin() {
     }
   };
 
+  const handleResolveMessage = async (message) => {
+    if (!accessToken) return;
+    try {
+      const res = await fetch(`${CONTACT_API_BASE}/${message.id}/resolve`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to resolve message");
+      }
+      setMessages((prev) =>
+        prev.map((item) =>
+          item.id === message.id
+            ? data?.data || { ...item, isResolved: true }
+            : item
+        )
+      );
+      addToast("Message marked as resolved", "success");
+    } catch (error) {
+      addToast(error?.message || "Failed to resolve message", "error");
+    }
+  };
+
+  const formatDate = (value) => {
+    const date = value ? new Date(value) : null;
+    if (!date || Number.isNaN(date.getTime())) return "";
+    return date.toLocaleString();
+  };
+
   const filtered = products.filter(p =>
     p.productName?.toLowerCase().includes(search.toLowerCase()) ||
     p.brand?.toLowerCase().includes(search.toLowerCase()) ||
     p.category?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const summaryCards = useMemo(() => ([
+    {
+      key: "products",
+      label: "Products",
+      value: products.length,
+      helper: `${products.length} listed`,
+    },
+    {
+      key: "orders",
+      label: "Orders",
+      value: null,
+      helper: "Connect order service",
+    },
+    {
+      key: "payments",
+      label: "Payments",
+      value: null,
+      helper: "Connect payment service",
+    },
+    {
+      key: "users",
+      label: "Users",
+      value: typeof usersTotal === "number" ? usersTotal : null,
+      helper: typeof usersTotal === "number" ? "Active accounts" : "Auth service",
+    },
+    {
+      key: "messages",
+      label: "Messages",
+      value: messages.length,
+      helper: `${unresolvedMessages} unresolved`,
+    },
+  ]), [messages.length, products.length, unresolvedMessages, usersTotal]);
 
   return (
     <div
@@ -160,7 +278,13 @@ export default function ProductServiceAdmin() {
       <Sidebar
         activeSection={section}
         onSelect={setSection}
-        apiBase={section === "users" ? "http://localhost:5000/api/auth" : API_BASE}
+        apiBase={
+          section === "users"
+            ? AUTH_BASE_URL
+            : section === "messages"
+            ? CONTACT_API_BASE
+            : PRODUCT_API_BASE
+        }
       />
 
       <div style={{ marginLeft: 280, padding: "48px 56px" }}>
@@ -172,7 +296,7 @@ export default function ProductServiceAdmin() {
               Admin Dashboard
             </h1>
             <p style={{ color: "#6b7280", fontSize: 13, margin: "8px 0 0" }}>
-              Manage products and users in one place
+              Manage products, users, and service operations in one place
             </p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
@@ -188,6 +312,45 @@ export default function ProductServiceAdmin() {
               </button>
             )}
           </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 16,
+            marginBottom: 30,
+          }}
+        >
+          {summaryCards.map((card) => (
+            <div
+              key={card.key}
+              style={{
+                background: "rgba(255,255,255,0.95)",
+                borderRadius: 16,
+                padding: "16px 18px",
+                border: "1px solid rgba(31,27,46,.08)",
+                boxShadow: "0 12px 24px rgba(31,27,46,.04)",
+              }}
+            >
+              <div style={{ fontSize: 11, color: "rgba(31,27,46,.55)", letterSpacing: 2, textTransform: "uppercase" }}>
+                {card.label}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 26,
+                  color: "#1f1b2e",
+                  marginTop: 6,
+                }}
+              >
+                {typeof card.value === "number" ? card.value : "—"}
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(31,27,46,.5)", marginTop: 6 }}>
+                {card.helper}
+              </div>
+            </div>
+          ))}
         </div>
 
         {section === "products" ? (
@@ -310,8 +473,150 @@ export default function ProductServiceAdmin() {
               </p>
             )}
           </>
-        ) : (
+        ) : section === "users" ? (
           <UserManagement addToast={addToast} />
+        ) : section === "messages" ? (
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <div>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: "#1f1b2e", margin: 0 }}>
+                  Messages
+                </h2>
+                <p style={{ color: "#6b7280", fontSize: 12, marginTop: 6 }}>
+                  Recent contact requests from customers
+                </p>
+              </div>
+              <button onClick={fetchMessages} style={{
+                padding: "10px 16px", borderRadius: 12, border: "1.5px solid rgba(31,27,46,.15)",
+                background: "rgba(255,255,255,0.9)", cursor: "pointer", fontSize: 12,
+              }}>
+                ↻ Refresh
+              </button>
+            </div>
+
+            {messagesLoading ? (
+              <div style={{ textAlign: "center", padding: "80px 0" }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: "50%",
+                  border: "3px solid #e8e0f7", borderTopColor: "#8200db",
+                  animation: "spin 1s linear infinite", margin: "0 auto 16px",
+                }} />
+                <p style={{ color: "#999", fontSize: 13 }}>Loading messages…</p>
+              </div>
+            ) : messages.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px 0", color: "#999" }}>
+                <div style={{ fontSize: 56, marginBottom: 16 }}>📨</div>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#1a002e", marginBottom: 8 }}>
+                  No messages yet
+                </p>
+                <p style={{ fontSize: 13 }}>Incoming messages will appear here.</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    style={{
+                      background: "rgba(255,255,255,0.95)",
+                      borderRadius: 16,
+                      padding: "18px 20px",
+                      border: "1px solid rgba(31,27,46,.08)",
+                      display: "grid",
+                      gridTemplateColumns: "1.2fr 2fr 1fr",
+                      gap: 18,
+                      alignItems: "center",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 600, color: "#1f1b2e", fontSize: 13 }}>
+                        {message.name}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#6b7280", marginTop: 4 }}>
+                        {message.email}
+                      </div>
+                      {message.phone ? (
+                        <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>
+                          {message.phone}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, color: "#1f1b2e", fontSize: 13 }}>
+                        {message.subject}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#6b7280", marginTop: 6, lineHeight: 1.5 }}>
+                        {message.message}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 11, color: "#9ca3af" }}>{formatDate(message.createdAt)}</div>
+                      <div
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                          padding: "4px 10px",
+                          borderRadius: 999,
+                          fontSize: 11,
+                          marginTop: 8,
+                          background: message.isResolved ? "rgba(34,197,94,.12)" : "rgba(251,146,60,.16)",
+                          color: message.isResolved ? "#16a34a" : "#c2410c",
+                        }}
+                      >
+                        {message.isResolved ? "Resolved" : "Open"}
+                      </div>
+                      <div>
+                        <button
+                          disabled={message.isResolved}
+                          onClick={() => handleResolveMessage(message)}
+                          style={{
+                            marginTop: 10,
+                            padding: "8px 14px",
+                            borderRadius: 10,
+                            border: "1.5px solid rgba(31,27,46,.12)",
+                            background: message.isResolved ? "rgba(229,231,235,.8)" : "#1f1b2e",
+                            color: message.isResolved ? "#9ca3af" : "#fff",
+                            cursor: message.isResolved ? "not-allowed" : "pointer",
+                            fontSize: 12,
+                          }}
+                        >
+                          {message.isResolved ? "Resolved" : "Resolve"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : section === "orders" ? (
+          <div style={{
+            background: "rgba(255,255,255,0.95)",
+            borderRadius: 16,
+            padding: "24px",
+            border: "1px solid rgba(31,27,46,.08)",
+          }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, color: "#1f1b2e", marginTop: 0 }}>
+              Orders
+            </h2>
+            <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 0 }}>
+              Connect the order service to manage order fulfillment and returns.
+            </p>
+          </div>
+        ) : (
+          <div style={{
+            background: "rgba(255,255,255,0.95)",
+            borderRadius: 16,
+            padding: "24px",
+            border: "1px solid rgba(31,27,46,.08)",
+          }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, color: "#1f1b2e", marginTop: 0 }}>
+              Payments
+            </h2>
+            <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 0 }}>
+              Connect the payment service to review transactions and refunds.
+            </p>
+          </div>
         )}
       </div>
 

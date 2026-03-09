@@ -4,7 +4,10 @@ const TOP_NAV_HEIGHT = 80;
 export default function Sidebar({ activeSection = "products", onSelect, apiBase }) {
   const items = [
     { key: "products", label: "Products" },
+    { key: "orders", label: "Orders" },
+    { key: "payments", label: "Payments" },
     { key: "users", label: "Users" },
+    { key: "messages", label: "Messages" },
   ];
   const resolvedApiBase = apiBase || PRODUCT_API_BASE;
 
@@ -91,7 +94,7 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
           padding: "0 24px",
         }}
       >
-        <div
+        {/* <div
           style={{
             padding: "14px 16px",
             borderRadius: 16,
@@ -106,7 +109,7 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
             Message
           </div>
           Keep roles accurate to avoid access issues. Updates take effect immediately.
-        </div>
+        </div> */}
       </div>
 
       <div
