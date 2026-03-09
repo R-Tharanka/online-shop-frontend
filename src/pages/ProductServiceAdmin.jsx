@@ -163,7 +163,7 @@ export default function ProductServiceAdmin() {
         apiBase={section === "users" ? "http://localhost:5000/api/auth" : API_BASE}
       />
 
-      <div style={{ marginLeft: 300, padding: "48px 56px" }}>
+      <div style={{ marginLeft: 280, padding: "48px 56px" }}>
 
         {/* header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
@@ -176,28 +176,6 @@ export default function ProductServiceAdmin() {
             </p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            {[
-              { key: "products", label: "Products" },
-              { key: "users", label: "Users" },
-            ].map((item) => (
-              <button
-                key={item.key}
-                onClick={() => setSection(item.key)}
-                style={{
-                  padding: "10px 16px",
-                  borderRadius: 12,
-                  border: section === item.key ? "1.5px solid #1f1b2e" : "1.5px solid rgba(31,27,46,.15)",
-                  background: section === item.key ? "#1f1b2e" : "rgba(255,255,255,0.9)",
-                  color: section === item.key ? "#fff" : "#1f1b2e",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 600,
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
             {section === "products" && (
               <button onClick={openCreate} style={{
                 background: "linear-gradient(135deg, #1f1b2e, #5f44ff)",

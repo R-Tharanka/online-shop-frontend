@@ -1,9 +1,10 @@
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
+const TOP_NAV_HEIGHT = 80;
 
 export default function Sidebar({ activeSection = "products", onSelect, apiBase }) {
   const items = [
-    { key: "products", icon: "📦", label: "Products" },
-    { key: "users", icon: "👥", label: "Users" },
+    { key: "products", label: "Products" },
+    { key: "users", label: "Users" },
   ];
   const resolvedApiBase = apiBase || PRODUCT_API_BASE;
 
@@ -11,15 +12,15 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
     <aside
       style={{
         position: "fixed",
-        left: 24,
-        top: 24,
-        bottom: 24,
-        width: 240,
-        borderRadius: 24,
+        left: 0,
+        top: TOP_NAV_HEIGHT,
+        height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
+        width: 260,
+        borderRadius: 0,
         background:
           "linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(247,248,255,0.9) 60%, rgba(240,243,255,0.95) 100%)",
-        border: "1px solid rgba(31,27,46,0.08)",
-        boxShadow: "0 18px 45px rgba(31, 27, 46, 0.08)",
+        borderRight: "1px solid rgba(31,27,46,0.08)",
+        boxShadow: "0 10px 30px rgba(31, 27, 46, 0.06)",
         padding: "28px 0",
         display: "flex",
         flexDirection: "column",
@@ -78,11 +79,34 @@ export default function Sidebar({ activeSection = "products", onSelect, apiBase 
                 fontWeight: active ? 600 : 500,
               }}
             >
-              <span style={{ fontSize: 16 }}>{item.icon}</span>
               {item.label}
             </button>
           );
         })}
+      </div>
+
+      <div
+        style={{
+          marginTop: 20,
+          padding: "0 24px",
+        }}
+      >
+        <div
+          style={{
+            padding: "14px 16px",
+            borderRadius: 16,
+            background: "rgba(95, 68, 255, 0.08)",
+            border: "1px solid rgba(95, 68, 255, 0.2)",
+            color: "#1f1b2e",
+            fontSize: 12,
+            lineHeight: 1.5,
+          }}
+        >
+          <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 2, color: "rgba(31,27,46,.6)", marginBottom: 6 }}>
+            Message
+          </div>
+          Keep roles accurate to avoid access issues. Updates take effect immediately.
+        </div>
       </div>
 
       <div
