@@ -83,10 +83,10 @@ export default function Profile() {
               <p className="text-sm text-gray-500 mt-1">Pick up where you left off.</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <Link
-                  to="/order-details"
+                  to="/contact"
                   className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-[#cfc2ff] hover:text-[#1f1b2e]"
                 >
-                  Track recent orders
+                  Send a message
                 </Link>
                 <Link
                   to="/cart"
@@ -125,10 +125,10 @@ export default function Profile() {
                 ))}
               </div>
               <Link
-                to="/cart"
+                to="/contact"
                 className="mt-6 inline-flex items-center text-sm font-semibold text-[#5f44ff] hover:text-[#1f1b2e]"
               >
-                Review your cart →
+                Contact support →
               </Link>
             </div>
           </div>
