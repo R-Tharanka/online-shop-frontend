@@ -8,6 +8,7 @@ import Toast from "../../Components/ProductService/Toast";
 import UserManagement from "../../Components/Admin/UserManagement";
 import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
+import menuIcon from "../../assets/menu.png";
 
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
 const AUTH_BASE_URL =
@@ -287,17 +288,6 @@ export default function AdminDashboard() {
           gap: 8px;
           align-items: center;
         }
-        .admin-sidebar-toggle-icon {
-          display: inline-flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-        .admin-sidebar-toggle-icon span {
-          width: 16px;
-          height: 2px;
-          background: #1f1b2e;
-          border-radius: 999px;
-        }
         @media (max-width: 1100px) {
           .admin-content { margin-left: 0; padding: 32px 20px; }
           .admin-sidebar-toggle { display: inline-flex; align-items: center; }
@@ -328,11 +318,7 @@ export default function AdminDashboard() {
           className="admin-sidebar-toggle"
           aria-label="Open admin navigation"
         >
-          <span className="admin-sidebar-toggle-icon" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </span>
+          <img src={menuIcon} alt="" style={{ width: 16, height: 16 }} />
           Menu
         </button>
 
