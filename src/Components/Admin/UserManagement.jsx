@@ -137,8 +137,8 @@ export default function UserManagement({ addToast }) {
           <h1
             style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 32,
-              color: "#141322",
+              fontSize: 34,
+              color: "#1f1b2e",
               margin: 0,
               letterSpacing: -0.6,
             }}
@@ -147,11 +147,9 @@ export default function UserManagement({ addToast }) {
           </h1>
           <p
             style={{
-              color: "#8b8795",
-              fontSize: 12,
-              margin: "6px 0 0",
-              letterSpacing: 1,
-              textTransform: "uppercase",
+              color: "#6b7280",
+              fontSize: 13,
+              margin: "8px 0 0",
             }}
           >
             Manage profiles and roles
@@ -181,12 +179,12 @@ export default function UserManagement({ addToast }) {
               style={{
                 flex: 1,
                 padding: "11px 14px",
-                borderRadius: 10,
-                border: "1.5px solid #e5e7eb",
+                borderRadius: 12,
+                border: "1.5px solid rgba(31,27,46,.15)",
                 fontSize: 13,
-                background: "#fff",
+                background: "rgba(255,255,255,0.95)",
                 outline: "none",
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "'DM Sans', sans-serif",
               }}
             />
             <select
@@ -197,11 +195,11 @@ export default function UserManagement({ addToast }) {
               }}
               style={{
                 padding: "11px 12px",
-                borderRadius: 10,
-                border: "1.5px solid #e5e7eb",
+                borderRadius: 12,
+                border: "1.5px solid rgba(31,27,46,.15)",
                 fontSize: 12,
-                background: "#fff",
-                fontFamily: "'DM Mono', monospace",
+                background: "rgba(255,255,255,0.95)",
+                fontFamily: "'DM Sans', sans-serif",
               }}
             >
               <option value="">All roles</option>
@@ -219,11 +217,11 @@ export default function UserManagement({ addToast }) {
               }}
               style={{
                 padding: "11px 12px",
-                borderRadius: 10,
-                border: "1.5px solid #e5e7eb",
+                borderRadius: 12,
+                border: "1.5px solid rgba(31,27,46,.15)",
                 fontSize: 12,
-                background: "#fff",
-                fontFamily: "'DM Mono', monospace",
+                background: "rgba(255,255,255,0.95)",
+                fontFamily: "'DM Sans', sans-serif",
               }}
             >
               {[10, 20, 50].map((size) => (
@@ -236,13 +234,14 @@ export default function UserManagement({ addToast }) {
               type="submit"
               style={{
                 padding: "11px 18px",
-                borderRadius: 10,
-                border: "1.5px solid #1f2937",
-                background: "#111827",
+                borderRadius: 12,
+                border: "1.5px solid #1f1b2e",
+                background: "#1f1b2e",
                 color: "#fff",
                 cursor: "pointer",
                 fontSize: 12,
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 600,
               }}
             >
               Search
@@ -251,9 +250,9 @@ export default function UserManagement({ addToast }) {
 
           <div
             style={{
-              background: "#fff",
-              borderRadius: 14,
-              border: "1px solid #e5e7eb",
+              background: "rgba(255,255,255,0.95)",
+              borderRadius: 18,
+              border: "1px solid rgba(31,27,46,.08)",
               overflow: "hidden",
             }}
           >
@@ -263,7 +262,7 @@ export default function UserManagement({ addToast }) {
                 gridTemplateColumns: "1.2fr 1.4fr 0.9fr 0.8fr",
                 gap: 12,
                 padding: "12px 16px",
-                background: "#f9fafb",
+                background: "rgba(31,27,46,0.04)",
                 fontSize: 11,
                 color: "#6b7280",
                 textTransform: "uppercase",
@@ -294,13 +293,13 @@ export default function UserManagement({ addToast }) {
                     width: "100%",
                     border: "none",
                     textAlign: "left",
-                    background: selectedUser?.id === u.id ? "#111827" : "#fff",
+                    background: selectedUser?.id === u.id ? "#1f1b2e" : "transparent",
                     color: selectedUser?.id === u.id ? "#fff" : "#111827",
                     display: "grid",
                     gridTemplateColumns: "1.2fr 1.4fr 0.9fr 0.8fr",
                     gap: 12,
                     padding: "12px 16px",
-                    borderTop: "1px solid #f3f4f6",
+                    borderTop: "1px solid rgba(31,27,46,.06)",
                     cursor: "pointer",
                     transition: "background .15s ease",
                   }}
@@ -338,9 +337,9 @@ export default function UserManagement({ addToast }) {
                 disabled={!canPageBack}
                 style={{
                   padding: "8px 14px",
-                  borderRadius: 8,
-                  border: "1px solid #e5e7eb",
-                  background: canPageBack ? "#fff" : "#f3f4f6",
+                  borderRadius: 10,
+                  border: "1px solid rgba(31,27,46,.15)",
+                  background: canPageBack ? "rgba(255,255,255,0.95)" : "rgba(31,27,46,0.06)",
                   cursor: canPageBack ? "pointer" : "not-allowed",
                   fontSize: 12,
                 }}
@@ -356,9 +355,9 @@ export default function UserManagement({ addToast }) {
                 disabled={!canPageForward}
                 style={{
                   padding: "8px 14px",
-                  borderRadius: 8,
-                  border: "1px solid #e5e7eb",
-                  background: canPageForward ? "#fff" : "#f3f4f6",
+                  borderRadius: 10,
+                  border: "1px solid rgba(31,27,46,.15)",
+                  background: canPageForward ? "rgba(255,255,255,0.95)" : "rgba(31,27,46,0.06)",
                   cursor: canPageForward ? "pointer" : "not-allowed",
                   fontSize: 12,
                 }}
@@ -372,9 +371,9 @@ export default function UserManagement({ addToast }) {
         <div>
           <div
             style={{
-              background: "#fff",
-              borderRadius: 14,
-              border: "1px solid #e5e7eb",
+              background: "rgba(255,255,255,0.95)",
+              borderRadius: 18,
+              border: "1px solid rgba(31,27,46,.08)",
               padding: "18px",
               marginBottom: 18,
             }}
@@ -390,19 +389,19 @@ export default function UserManagement({ addToast }) {
                 style={{
                   flex: 1,
                   padding: "10px 12px",
-                  borderRadius: 8,
-                  border: "1.5px solid #e5e7eb",
+                  borderRadius: 10,
+                  border: "1.5px solid rgba(31,27,46,.15)",
                   fontSize: 12,
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: "'DM Sans', sans-serif",
                 }}
               />
               <button
                 type="submit"
                 style={{
                   padding: "10px 14px",
-                  borderRadius: 8,
-                  border: "1px solid #111827",
-                  background: "#111827",
+                  borderRadius: 10,
+                  border: "1px solid #1f1b2e",
+                  background: "#1f1b2e",
                   color: "#fff",
                   fontSize: 12,
                   cursor: "pointer",
@@ -415,9 +414,9 @@ export default function UserManagement({ addToast }) {
 
           <div
             style={{
-              background: "#fff",
-              borderRadius: 14,
-              border: "1px solid #e5e7eb",
+              background: "rgba(255,255,255,0.95)",
+              borderRadius: 18,
+              border: "1px solid rgba(31,27,46,.08)",
               padding: "18px",
             }}
           >
@@ -488,8 +487,8 @@ export default function UserManagement({ addToast }) {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            border: "1px solid #f3f4f6",
-                            borderRadius: 10,
+                            border: "1px solid rgba(31,27,46,.08)",
+                            borderRadius: 12,
                             padding: "8px 10px",
                           }}
                         >
@@ -501,9 +500,9 @@ export default function UserManagement({ addToast }) {
                               onClick={() => handleRoleChange(role, "add")}
                               style={{
                                 padding: "6px 10px",
-                                borderRadius: 8,
-                                border: "1px solid #111827",
-                                background: disableAdd ? "#f3f4f6" : "#111827",
+                                borderRadius: 10,
+                                border: "1px solid #1f1b2e",
+                                background: disableAdd ? "rgba(31,27,46,.08)" : "#1f1b2e",
                                 color: disableAdd ? "#9ca3af" : "#fff",
                                 cursor: disableAdd ? "not-allowed" : "pointer",
                                 fontSize: 11,
@@ -517,10 +516,10 @@ export default function UserManagement({ addToast }) {
                               onClick={() => handleRoleChange(role, "remove")}
                               style={{
                                 padding: "6px 10px",
-                                borderRadius: 8,
-                                border: "1px solid #e11d48",
-                                background: disableRemove ? "#f3f4f6" : "#fff",
-                                color: disableRemove ? "#9ca3af" : "#e11d48",
+                                borderRadius: 10,
+                                border: "1px solid rgba(239,68,68,.4)",
+                                background: disableRemove ? "rgba(31,27,46,.08)" : "#fff",
+                                color: disableRemove ? "#9ca3af" : "#ef4444",
                                 cursor: disableRemove ? "not-allowed" : "pointer",
                                 fontSize: 11,
                               }}
