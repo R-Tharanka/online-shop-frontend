@@ -251,8 +251,8 @@ export default function AdminDashboard() {
     {
       key: "messages",
       label: "Messages",
-      value: messages.length,
-      helper: `${unresolvedMessages} unresolved`,
+      value: unresolvedMessages,
+      helper: `${messages.length} total`,
     },
   ]), [messages.length, products.length, unresolvedMessages, usersTotal]);
 
