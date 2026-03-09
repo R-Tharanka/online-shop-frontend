@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import OrderDetails from './pages/OrderDetails';
+import Cart from './pages/orders/Cart';
+import Checkout from './pages/orders/Checkout';
+import OrderDetails from './pages/orders/OrderDetails';
 
-import ProductServiceAdmin from './pages/ProductServiceAdmin';
-import ProductUserItem from './pages/ProductUserItem';
-import ProductUserDescription from './pages/ProductUserDescription';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ProductUserItem from './pages/products/ProductUserItem';
+import ProductUserDescription from './pages/products/ProductUserDescription';
 import { Login, Register, ForgotPassword, ResetPassword, Profile } from './pages/auth';
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
 import { useAuth } from './Components/Auth/AuthProvider';
@@ -79,7 +79,7 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute roles="shop_owner">
-                <ProductServiceAdmin />
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
