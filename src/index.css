@@ -12,7 +12,8 @@
 :root {
     color-scheme: light;
     --color-primary: #1f1b2e;
-    --color-secondary: #daab2d;
+    /* --color-secondary: #daab2d; */
+    --color-secondary: #FFD700;
     --color-accent: #5f44ff;
     --color-surface: #ffffff;
     --color-muted: #6b7280;
