@@ -21,12 +21,14 @@ function NavLink({ to, children }) {
 }
 
 export default function TopNav() {
-  const { isAuthenticated, logout, hasRole } = useAuth();
+  const { isAuthenticated, logout, hasRole, user } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleNavClick = () => {
     if (menuOpen) setMenuOpen(false);
+    if (profileOpen) setProfileOpen(false);
   };
 
   return (
@@ -53,15 +55,40 @@ export default function TopNav() {
             {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
 
             {isAuthenticated ? (
-              <>
-                <NavLink to="/account">Account</NavLink>
+              <div className={`relative ${canAccessAdmin ? "ml-2" : ""}`}>
                 <button
-                  onClick={logout}
-                  className="px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+                  type="button"
+                  onClick={() => setProfileOpen((prev) => !prev)}
+                  className="h-9 w-9 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1f1b2e] hover:bg-gray-50"
+                  aria-expanded={profileOpen}
+                  aria-label="Open profile menu"
                 >
-                  Sign out
+                  {user?.name?.slice(0, 1)?.toUpperCase() || "U"}
                 </button>
-              </>
+                {profileOpen ? (
+                  <div className="absolute right-0 mt-2 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-2 text-sm">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleNavClick();
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    >
+                      <NavLink to="/account">Account</NavLink>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleNavClick();
+                        logout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <>
                 <NavLink to="/auth/login">Sign in</NavLink>
