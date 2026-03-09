@@ -17,19 +17,19 @@ export default function StatsBar({ products }) {
       {/* ── low stock alert ─────────────────────────────────────────────── */}
       {lowStock.length > 0 && !dismissed && (
         <div style={{
-          background: "linear-gradient(135deg, #fff7ed, #fff3e0)",
-          border: "1.5px solid #f59e0b",
-          borderRadius: 14,
+          background: "linear-gradient(135deg, rgba(255,247,237,0.9), rgba(255,243,224,0.9))",
+          border: "1.5px solid rgba(245,158,11,.45)",
+          borderRadius: 18,
           padding: "16px 20px",
           marginBottom: 20,
-          boxShadow: "0 2px 12px rgba(245,158,11,.15)",
+          boxShadow: "0 12px 28px rgba(245,158,11,.12)",
         }}>
           {/* header row */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 18 }}>⚠️</span>
               <span style={{
-                fontFamily: "'DM Mono', monospace", fontSize: 12, fontWeight: 700,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700,
                 color: "#b45309", letterSpacing: 1, textTransform: "uppercase",
               }}>
                 Low Stock Alert — {lowStock.length} product{lowStock.length > 1 ? "s" : ""} need restocking
@@ -49,14 +49,14 @@ export default function StatsBar({ products }) {
             {lowStock.map(p => (
               <div key={p._id} style={{
                 display: "flex", alignItems: "center", gap: 10,
-                background: "rgba(255,255,255,.7)", borderRadius: 8,
-                padding: "9px 14px", border: "1px solid #fde68a",
+                background: "rgba(255,255,255,.8)", borderRadius: 10,
+                padding: "9px 14px", border: "1px solid rgba(253,230,138,.9)",
               }}>
                 <span style={{ fontSize: 14 }}>
                   {p.stockQuantity === 0 ? "🔴" : "🟡"}
                 </span>
                 <span style={{
-                  fontFamily: "'DM Mono', monospace", fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 11,
                   color: "#78350f", flex: 1,
                 }}>
                   <strong style={{ color: "#92400e" }}>ID:</strong> {p._id}
@@ -85,8 +85,8 @@ export default function StatsBar({ products }) {
           { label: "Categories", value: stats.categories, icon: "🏷️", color: "#3b82f6" },
         ].map(s => (
           <div key={s.label} style={{
-            background: "#fff", borderRadius: 14, padding: "20px 22px",
-            border: "1px solid #f0e8fc", boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+            background: "rgba(255,255,255,0.95)", borderRadius: 18, padding: "20px 22px",
+            border: "1px solid rgba(31,27,46,.08)", boxShadow: "0 12px 24px rgba(31,27,46,.06)",
           }}>
             <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
             <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, color: s.color, fontWeight: 700, lineHeight: 1 }}>

@@ -8,6 +8,9 @@ import OrderDetails from './pages/OrderDetails';
 import ProductServiceAdmin from './pages/ProductServiceAdmin';
 import ProductUserItem from './pages/ProductUserItem';
 import ProductUserDescription from './pages/ProductUserDescription';
+import { Login, Register, ForgotPassword, ResetPassword, Profile } from './pages/auth';
+import ProtectedRoute from './Components/Auth/ProtectedRoute';
+import { useAuth } from './Components/Auth/AuthProvider';
 
 function NavLink({ to, children }) {
   const location = useLocation();
@@ -28,6 +31,8 @@ function NavLink({ to, children }) {
 }
 
 function App() {
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <Router>
       <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -42,6 +47,22 @@ function App() {
             <NavLink to="/checkout">💳 Checkout</NavLink>
             <NavLink to="/order-details">📦 Orders</NavLink>
             <NavLink to="/admin">⚙️ Admin</NavLink>
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/account">👤 Account</NavLink>
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/auth/login">Sign in</NavLink>
+                <NavLink to="/auth/register">Join</NavLink>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -54,12 +75,47 @@ function App() {
           <Route path="/products/:id" element={<ProductUserDescription />} />
 
           {/* Admin */}
-          <Route path="/admin" element={<ProductServiceAdmin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute roles="shop_owner">
+                <ProductServiceAdmin />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Cart / Order flow */}
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-details" element={<OrderDetails />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order-details"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Auth */}
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/register" element={<Register />} />
+          <Route path="/auth/forgot" element={<ForgotPassword />} />
+          <Route path="/auth/reset" element={<ResetPassword />} />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Home */}
           <Route
