@@ -35,7 +35,7 @@ function App() {
           {/* Cart / Order flow */}
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={ <ProtectedRoute> <Checkout /> </ProtectedRoute> } />
-          <Route path="/order-details" element={ <ProtectedRoute> <OrderDetails /> </ProtectedRoute> } />
+          <Route path="/order-details" element={<OrderDetails />} />
 
           {/* Auth */}
           <Route path="/auth/login" element={<Login />} />
