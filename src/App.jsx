@@ -1,57 +1,59 @@
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
-import AboutUs from './pages/aboutUs';
-import ContactUs from './pages/contactUs';
 
-function HomePage() {
-  return (
-    <main className="min-h-[calc(100vh-88px)] bg-[#FBFBFB] px-4 sm:px-6 lg:px-8 py-14">
-      <section className="max-w-6xl mx-auto rounded-3xl bg-gradient-to-r from-[#E8F9FF] to-white border border-slate-200 p-8 md:p-12 shadow-sm">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900">Welcome to Veloura</h1>
-        <p className="mt-4 text-slate-600 max-w-2xl text-base md:text-lg">
-          Discover curated essentials with premium quality, smart design, and a shopping experience made for real life.
-        </p>
-      </section>
-    </main>
-  );
-}
+import AboutUs from './pages/marketing/AboutUs';
 
-function OrdersPage() {
-  return (
-    <main className="min-h-[calc(100vh-88px)] bg-[#FBFBFB] px-4 sm:px-6 lg:px-8 py-14">
-      <section className="max-w-6xl mx-auto rounded-3xl bg-white border border-slate-200 p-8 md:p-12 shadow-sm">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Orders</h1>
-        <p className="mt-3 text-slate-600">Your order management section is ready for product and cart integration.</p>
-      </section>
-    </main>
-  );
-}
+import Cart from './pages/orders/Cart';
+import Checkout from './pages/orders/Checkout';
+import OrderDetails from './pages/orders/OrderDetails';
+import ContactUs from './pages/marketing/contactUs';
 
-function LoginPage() {
-  return (
-    <main className="min-h-[calc(100vh-88px)] bg-[#FBFBFB] px-4 sm:px-6 lg:px-8 py-14">
-      <section className="max-w-3xl mx-auto rounded-3xl bg-white border border-slate-200 p-8 md:p-12 shadow-sm">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Login</h1>
-        <p className="mt-3 text-slate-600">Sign in to access your account, track orders, and manage your preferences.</p>
-      </section>
-    </main>
-  );
-}
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ProductUserItem from './pages/products/ProductUserItem';
+import ProductUserDescription from './pages/products/ProductUserDescription';
+import { Login, Register, ForgotPassword, ResetPassword, Profile } from './pages/auth';
+import ProtectedRoute from './Components/Auth/ProtectedRoute';
+import TopNav from './Components/Navigation/TopNav';
 
 function App() {
   return (
-    <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+    <Router>
+      <TopNav />
+
+      <main className="min-h-screen bg-gray-50">
+        <Routes>
+
+          <Route path="/" element={<ProductUserItem />} />
+
+          {/* Product routes */}
+          <Route path="/products" element={<ProductUserItem />} />
+          <Route path="/products/:id" element={<ProductUserDescription />} />
+
+          {/* Admin */}
+          <Route path="/admin" element={ <ProtectedRoute roles="shop_owner"> <AdminDashboard /> </ProtectedRoute> } />
+
+          {/* Cart / Order flow */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={ <ProtectedRoute> <Checkout /> </ProtectedRoute> } />
+          <Route path="/order-details" element={ <ProtectedRoute> <OrderDetails /> </ProtectedRoute> } />
+
+          {/* Auth */}
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/register" element={<Register />} />
+          <Route path="/auth/forgot" element={<ForgotPassword />} />
+          <Route path="/auth/reset" element={<ResetPassword />} />
+          <Route path="/account" element={ <ProtectedRoute> <Profile /> </ProtectedRoute> } />
+
+          {/* Marketing */}
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactUs />} />
+
+          {/* fallback */}
+          <Route path="*" element={<Navigate to="/products" replace />} />
+
+        </Routes>
+      </main>
+    </Router>
   );
 }
 
