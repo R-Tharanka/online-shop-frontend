@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { getUserOrders, getOrder, cancelOrder } from './orderApi';
+import { getUserOrders, getOrder, cancelOrder, getToken } from './orderApi';
 
 const STATUS_CONFIG = {
   pending:    { style: 'bg-amber-100 text-amber-700 border-amber-200',    icon: '🕐', label: 'Pending',    bar: 1 },
@@ -251,12 +251,23 @@ export default function OrderDetails() {
   const justPlaced = !!location.state?.order;
 
   useEffect(() => {
+    // Skip the API call entirely when no token is present to avoid a
+    // guaranteed 401 console error when the user is not logged in.
+    if (!getToken()) {
+      setError('Please log in to view your orders.');
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
     getUserOrders()
-      .then(data => { setOrders(data); setLoading(false); })
+      .then(data => { if (!cancelled) { setOrders(data); setLoading(false); } })
       .catch(err => {
+        if (cancelled) return;
         setError(err.status === 401 ? 'Please log in to view your orders.' : 'Failed to load orders.');
         setLoading(false);
       });
+    return () => { cancelled = true; };
   }, []);
 
   const handleSelectOrder = async (id) => {
