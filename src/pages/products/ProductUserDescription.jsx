@@ -88,7 +88,9 @@ export default function ProductUserDescription() {
     if (!deducted) return;
 
     sessionStorage.setItem("buyNow", JSON.stringify(buildCartItem()));
-    showToast(`⚡ Order placed for ${product.productName} (${selectedSize} × ${quantity})!`, "success");
+    navigate("/checkout");
+
+    //showToast(`⚡ Order placed for ${product.productName} (${selectedSize} × ${quantity})!`, "success");
   };
 
   if (fetching) {
