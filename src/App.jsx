@@ -45,14 +45,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/order-details"
-            element={
-              <ProtectedRoute>
-                <OrderDetails />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/order-details" element={<OrderDetails />} />
           <Route path="/contact" element={<ContactUs />} />
 
           {/* Auth */}
