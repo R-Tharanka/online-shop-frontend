@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { getUserOrders, getOrder, cancelOrder, getToken } from './orderApi';
+import { getUserOrders, getOrder, cancelOrder, getToken, createOrder } from './orderApi';
+import { getStripeSession } from './paymentApi';
 
 const STATUS_CONFIG = {
   pending:    { style: 'bg-amber-100 text-amber-700 border-amber-200',    icon: '🕐', label: 'Pending',    bar: 1 },
@@ -218,7 +219,7 @@ function OrderDetailView({ order, onBack, onCancel, cancellingId }) {
               {order.paymentMethod === 'card' ? '💳 Credit / Debit Card' : '💵 Cash on Delivery'}
             </p>
             <p className="text-xs text-gray-400 mt-1">
-              {order.paymentMethod === 'card' ? 'Processed at delivery' : 'Pay when received'}
+              {order.paymentMethod === 'card' ? 'Paid online via Stripe' : 'Pay when received'}
             </p>
           </div>
         )}
@@ -248,9 +249,64 @@ export default function OrderDetails() {
   const [error, setError] = useState('');
   const [cancellingId, setCancellingId] = useState(null);
 
-  const justPlaced = !!location.state?.order;
+  const [justPlaced, setJustPlaced] = useState(!!location.state?.order);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const stripeSessionId = params.get('session_id');
+
+    // If we returned from Stripe, finalize the order first.
+    if (stripeSessionId) {
+      (async () => {
+        try {
+          if (!getToken()) {
+            setError('Please log in to complete your order.');
+            setLoading(false);
+            return;
+          }
+
+          const pendingRaw = sessionStorage.getItem('pendingCheckout');
+          const pending = pendingRaw ? JSON.parse(pendingRaw) : null;
+          if (!pending?.items?.length || !pending?.shippingAddress) {
+            setError('Missing checkout details. Please try again from Checkout.');
+            setLoading(false);
+            return;
+          }
+
+          const session = await getStripeSession(stripeSessionId);
+          if (session?.payment_status !== 'paid') {
+            setError('Payment not completed. Please try again.');
+            setLoading(false);
+            return;
+          }
+
+          const order = await createOrder({
+            items: pending.items,
+            shippingAddress: pending.shippingAddress,
+            paymentMethod: pending.paymentMethod || 'card',
+          });
+
+          if (pending.isBuyNow) sessionStorage.removeItem('buyNow');
+          else sessionStorage.removeItem('cart');
+          sessionStorage.removeItem('pendingCheckout');
+
+          // Update local state so the UI shows the new order immediately.
+          setOrders((prev) => (Array.isArray(prev) ? [order, ...prev] : [order]));
+          setSelectedOrder(order);
+          setJustPlaced(true);
+          setLoading(false);
+          setError('');
+
+          // Replace URL to drop the session_id without relying on a remount.
+          navigate('/order-details', { replace: true });
+        } catch (err) {
+          setError(err?.message || 'Could not finalize the payment.');
+          setLoading(false);
+        }
+      })();
+      return;
+    }
+
     // Skip the API call entirely when no token is present to avoid a
     // guaranteed 401 console error when the user is not logged in.
     if (!getToken()) {
@@ -269,6 +325,10 @@ export default function OrderDetails() {
       });
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    if (location.state?.order) setJustPlaced(true);
+  }, [location.state]);
 
   const handleSelectOrder = async (id) => {
     try {

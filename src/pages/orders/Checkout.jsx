@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createOrder } from './orderApi';
+import { createStripeCheckoutSession } from './paymentApi';
 
 const REQUIRED = ['fullName', 'address', 'city', 'postalCode', 'phone'];
 
@@ -78,6 +79,18 @@ export default function Checkout() {
     setPlacing(true);
     setOrderError('');
     try {
+      if (paymentMethod === 'card') {
+        // Store the order draft locally; we'll create the Order ONLY after Stripe confirms payment.
+        sessionStorage.setItem(
+          'pendingCheckout',
+          JSON.stringify({ items, shippingAddress: shipping, paymentMethod, isBuyNow })
+        );
+        const session = await createStripeCheckoutSession({ items });
+        if (!session?.url) throw new Error('Stripe session URL not returned');
+        window.location.href = session.url;
+        return;
+      }
+
       const order = await createOrder({ items, shippingAddress: shipping, paymentMethod });
       if (isBuyNow) sessionStorage.removeItem('buyNow');
       else sessionStorage.removeItem('cart');
@@ -219,7 +232,7 @@ export default function Checkout() {
               </div>
               {paymentMethod === 'card' && (
                 <p className="text-xs text-gray-400 mt-3 flex items-center gap-1">
-                  <span>🔒</span> Card details collected securely at delivery confirmation.
+                  <span>🔒</span> You will be redirected to Stripe to pay securely.
                 </p>
               )}
             </div>
@@ -247,7 +260,7 @@ export default function Checkout() {
                   Placing Order...
                 </>
               ) : (
-                `Place Order · Rs ${fmt(subtotal)}`
+                `${paymentMethod === 'card' ? 'Pay Now' : 'Place Order'} · Rs ${fmt(subtotal)}`
               )}
             </button>
 
