@@ -23,6 +23,7 @@ function NavLink({ to, children }) {
 export default function TopNav() {
   const { isAuthenticated, logout, hasRole, user } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
+  const isAdminView = isAuthenticated && canAccessAdmin;
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef(null);
@@ -50,7 +51,7 @@ export default function TopNav() {
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
         <div className="flex items-center">
           <Link
-            to="/"
+            to={isAdminView ? "/admin" : "/"}
             className="text-2xl font-semibold text-[#1f1b2e] tracking-tight flex items-center gap-2"
           >
             Veloura
@@ -61,26 +62,28 @@ export default function TopNav() {
           </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 justify-center">
-          <nav className="flex flex-wrap items-center gap-2">
-            <NavLink to="/products">Products</NavLink>
-            <NavLink to="/cart">Cart</NavLink>
-            <NavLink to="/checkout">Checkout</NavLink>
-            <NavLink to="/order-details">Orders</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
-            {!isAuthenticated ? (
-              <>
-                <NavLink to="/auth/login">Sign in</NavLink>
-                <NavLink to="/auth/register">Join</NavLink>
-              </>
-            ) : null}
-          </nav>
-        </div>
+        {!isAdminView ? (
+          <div className="hidden md:flex flex-1 justify-center">
+            <nav className="flex flex-wrap items-center gap-2">
+              <NavLink to="/products">Products</NavLink>
+              <NavLink to="/cart">Cart</NavLink>
+              <NavLink to="/checkout">Checkout</NavLink>
+              <NavLink to="/order-details">Orders</NavLink>
+              <NavLink to="/contact">Contact</NavLink>
+              {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
+              {!isAuthenticated ? (
+                <>
+                  <NavLink to="/auth/login">Sign in</NavLink>
+                  <NavLink to="/auth/register">Join</NavLink>
+                </>
+              ) : null}
+            </nav>
+          </div>
+        ) : null}
 
         <div className="ml-auto flex items-center gap-2">
           {isAuthenticated ? (
-            <div className="hidden md:flex items-center gap-8">
+            <div className={`${isAdminView ? "flex" : "hidden md:flex"} items-center gap-8`}>
               <button
                 type="button"
                 onClick={handleNavClick}
@@ -141,7 +144,7 @@ export default function TopNav() {
             </div>
           ) : null}
 
-          {isAuthenticated ? (
+          {isAuthenticated && !isAdminView ? (
             <button
               type="button"
               onClick={handleNavClick}
@@ -165,19 +168,21 @@ export default function TopNav() {
             </button>
           ) : null}
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="md:hidden inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation"
-          >
-            Menu
-          </button>
+          {!isAdminView ? (
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="md:hidden inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              aria-expanded={menuOpen}
+              aria-label="Toggle navigation"
+            >
+              Menu
+            </button>
+          ) : null}
         </div>
       </div>
 
-      {menuOpen ? (
+      {menuOpen && !isAdminView ? (
         <div className="md:hidden border-t border-gray-100 bg-white/95">
           <nav className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-2">
             <div onClick={handleNavClick}><NavLink to="/products">Products</NavLink></div>
