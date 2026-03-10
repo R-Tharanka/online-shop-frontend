@@ -72,7 +72,6 @@ export default function TopNav() {
             {!isAuthenticated ? (
               <>
                 <NavLink to="/auth/login">Sign in</NavLink>
-                <NavLink to="/auth/register">Join</NavLink>
               </>
             ) : null}
           </nav>
@@ -205,7 +204,6 @@ export default function TopNav() {
             ) : (
               <>
                 <div onClick={handleNavClick}><NavLink to="/auth/login">Sign in</NavLink></div>
-                <div onClick={handleNavClick}><NavLink to="/auth/register">Join</NavLink></div>
               </>
             )}
           </nav>
