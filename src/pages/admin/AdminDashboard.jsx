@@ -6,6 +6,7 @@ import ProductForm from "../../Components/ProductService/ProductForm";
 import ConfirmModal from "../../Components/ProductService/ConfirmModal";
 import Toast from "../../Components/ProductService/Toast";
 import UserManagement from "../../Components/Admin/UserManagement";
+import AdminOrders from "../../Components/Admin/AdminOrders";
 import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
 import menuIcon from "../../assets/menu.png";
@@ -44,6 +45,7 @@ export default function AdminDashboard() {
   const [toasts, setToasts] = useState([]);
   const [view, setView] = useState("grid");
   const [usersTotal, setUsersTotal] = useState(null);
+  const [ordersTotal, setOrdersTotal] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messagesLoading, setMessagesLoading] = useState(false);
 
@@ -55,7 +57,7 @@ export default function AdminDashboard() {
   );
 
   const addToast = useCallback((msg, type = "success") => {
-    const id = Date.now();
+    const id = crypto.randomUUID();
     setToasts(t => [...t, { id, msg, type }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
   }, []);
@@ -111,6 +113,12 @@ export default function AdminDashboard() {
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
   useEffect(() => { fetchUsersSummary(); }, [fetchUsersSummary]);
   useEffect(() => { fetchMessages(); }, [fetchMessages]);
+
+  // Auto-refresh products every 30s so stock changes from purchases are reflected
+  useEffect(() => {
+    const interval = setInterval(() => fetchProducts(), 30000);
+    return () => clearInterval(interval);
+  }, [fetchProducts]);
 
   const handleFormChange = (key, value) => setForm(f => ({ ...f, [key]: value }));
 
@@ -235,8 +243,8 @@ export default function AdminDashboard() {
     {
       key: "orders",
       label: "Orders",
-      value: null,
-      helper: "Connect order service",
+      value: typeof ordersTotal === "number" ? ordersTotal : null,
+      helper: typeof ordersTotal === "number" ? "All customer orders" : "Order service",
     },
     {
       key: "payments",
@@ -256,7 +264,7 @@ export default function AdminDashboard() {
       value: unresolvedMessages,
       helper: `${messages.length} total`,
     },
-  ]), [messages.length, products.length, unresolvedMessages, usersTotal]);
+  ]), [messages.length, products.length, unresolvedMessages, usersTotal, ordersTotal]);
 
   return (
     <div
@@ -623,19 +631,7 @@ export default function AdminDashboard() {
             )}
           </div>
         ) : section === "orders" ? (
-          <div style={{
-            background: "rgba(255,255,255,0.95)",
-            borderRadius: 16,
-            padding: "24px",
-            border: "1px solid rgba(31,27,46,.08)",
-          }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, color: "#1f1b2e", marginTop: 0 }}>
-              Orders
-            </h2>
-            <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 0 }}>
-              Connect the order service to manage order fulfillment and returns.
-            </p>
-          </div>
+          <AdminOrders addToast={addToast} onTotalChange={setOrdersTotal} />
         ) : (
           <div style={{
             background: "rgba(255,255,255,0.95)",

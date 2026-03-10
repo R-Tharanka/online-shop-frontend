@@ -62,24 +62,21 @@ export default function TopNav() {
           </Link>
         </div>
 
-        {!isAdminView ? (
-          <div className="hidden md:flex flex-1 justify-center">
-            <nav className="flex flex-wrap items-center gap-2">
-              <NavLink to="/products">Products</NavLink>
-              <NavLink to="/cart">Cart</NavLink>
-              <NavLink to="/checkout">Checkout</NavLink>
-              <NavLink to="/order-details">Orders</NavLink>
-              <NavLink to="/contact">Contact</NavLink>
-              {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
-              {!isAuthenticated ? (
-                <>
-                  <NavLink to="/auth/login">Sign in</NavLink>
-                  <NavLink to="/auth/register">Join</NavLink>
-                </>
-              ) : null}
-            </nav>
-          </div>
-        ) : null}
+        <div className="hidden md:flex flex-1 justify-center">
+          <nav className="flex flex-wrap items-center gap-2">
+            <NavLink to="/products">Products</NavLink>
+            <NavLink to="/cart">Cart</NavLink>
+            <NavLink to="/checkout">Checkout</NavLink>
+            <NavLink to="/order-details">Orders</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
+            {!isAuthenticated ? (
+              <>
+                <NavLink to="/auth/login">Sign in</NavLink>
+              </>
+            ) : null}
+          </nav>
+        </div>
 
         <div className="ml-auto flex items-center gap-2">
           {isAuthenticated ? (
@@ -210,7 +207,6 @@ export default function TopNav() {
             ) : (
               <>
                 <div onClick={handleNavClick}><NavLink to="/auth/login">Sign in</NavLink></div>
-                <div onClick={handleNavClick}><NavLink to="/auth/register">Join</NavLink></div>
               </>
             )}
           </nav>
