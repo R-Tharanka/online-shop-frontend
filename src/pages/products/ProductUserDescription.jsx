@@ -77,8 +77,8 @@ export default function ProductUserDescription() {
     sessionStorage.setItem("cart", JSON.stringify(existing));
 
     setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2500);
     showToast(`🛒 ${product.productName} (${selectedSize} × ${quantity}) added to cart!`, "success");
+    setTimeout(() => navigate("/cart"), 1500);
   };
 
   const handleBuyNow = async () => {

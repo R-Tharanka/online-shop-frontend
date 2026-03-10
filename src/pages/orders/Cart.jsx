@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const PRODUCT_API = import.meta.env.VITE_PRODUCT_API_BASE || 'http://localhost:5002/api/products';
+
 function readCart() {
   try { return JSON.parse(sessionStorage.getItem('cart') || '[]'); } catch { return []; }
 }
@@ -9,6 +11,30 @@ function writeCart(items) {
 }
 function itemKey(item) {
   return `${item.productId}-${item.selectedSize}`;
+}
+
+/** Silently restore qty units back to product stock. Fire-and-forget — cart UX must not block on this. */
+async function restoreStock(productId, qty) {
+  if (!productId || !qty || qty < 1) return;
+  try {
+    await fetch(`${PRODUCT_API}/${productId}/stock/restore`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: qty }),
+    });
+  } catch { /* non-critical — do not surface stock errors to the user */ }
+}
+
+/** Silently deduct qty units from product stock (used when increasing cart qty). */
+async function deductStock(productId, qty) {
+  if (!productId || !qty || qty < 1) return;
+  try {
+    await fetch(`${PRODUCT_API}/${productId}/stock`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: qty }),
+    });
+  } catch { /* non-critical */ }
 }
 
 function TrustBadge({ icon, text }) {
@@ -55,7 +81,15 @@ export default function Cart() {
     const updated = items.map(item => {
       if (item.productId === productId && item.selectedSize === selectedSize) {
         const newQty = item.quantity + delta;
-        return newQty < 1 ? null : { ...item, quantity: newQty };
+        if (newQty < 1) {
+          // Item will be removed — restore its full current quantity
+          restoreStock(productId, item.quantity);
+          return null;
+        }
+        // Qty decreased → restore 1 unit; qty increased → deduct 1 unit
+        if (delta < 0) restoreStock(productId, 1);
+        else           deductStock(productId, 1);
+        return { ...item, quantity: newQty };
       }
       return item;
     }).filter(Boolean);
@@ -63,20 +97,25 @@ export default function Cart() {
     setItems(updated);
   };
 
-  const removeItem = (productId, selectedSize, name) => {
+  const removeItem = (productId, selectedSize, name, quantity) => {
     const key = `${productId}-${selectedSize}`;
     const updated = items.filter(item => itemKey(item) !== key);
     writeCart(updated);
     setItems(updated);
     setSelected(prev => { const next = new Set(prev); next.delete(key); return next; });
+    // Restore the removed item's stock
+    restoreStock(productId, quantity);
     setRemoved(name || 'Item');
     setTimeout(() => setRemoved(null), 3000);
   };
 
   const removeSelected = () => {
+    const toRemove = items.filter(item => selected.has(itemKey(item)));
     const updated = items.filter(item => !selected.has(itemKey(item)));
     writeCart(updated);
     setItems(updated);
+    // Restore stock for every removed item
+    toRemove.forEach(item => restoreStock(item.productId, item.quantity));
     setSelected(new Set());
     setRemoved(`${selected.size} item${selected.size !== 1 ? 's' : ''}`);
     setTimeout(() => setRemoved(null), 3000);
@@ -260,7 +299,7 @@ export default function Cart() {
 
                       {/* Remove button — always visible */}
                       <button
-                        onClick={() => removeItem(item.productId, item.selectedSize, item.productName)}
+                        onClick={() => removeItem(item.productId, item.selectedSize, item.productName, item.quantity)}
                         className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-100"
                         title="Remove item"
                       >
