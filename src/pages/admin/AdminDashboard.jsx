@@ -112,6 +112,12 @@ export default function AdminDashboard() {
   useEffect(() => { fetchUsersSummary(); }, [fetchUsersSummary]);
   useEffect(() => { fetchMessages(); }, [fetchMessages]);
 
+  // Auto-refresh products every 30s so stock changes from purchases are reflected
+  useEffect(() => {
+    const interval = setInterval(() => fetchProducts(), 30000);
+    return () => clearInterval(interval);
+  }, [fetchProducts]);
+
   const handleFormChange = (key, value) => setForm(f => ({ ...f, [key]: value }));
 
   const openCreate = () => {
