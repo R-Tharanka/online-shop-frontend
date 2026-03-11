@@ -10,8 +10,8 @@ import Checkout from "./pages/orders/Checkout";
 import OrderDetails from "./pages/orders/OrderDetails";
 import ProductUserDescription from "./pages/products/ProductUserDescription";
 import ProductUserItem from "./pages/products/ProductUserItem";
-import ProtectedRoute from "./components/Auth/ProtectedRoute";
-import TopNav from "./components/Navigation/TopNav";
+import ProtectedRoute from "./Components/Auth/ProtectedRoute";
+import TopNav from "./Components/Navigation/TopNav";
 
 function App() {
   return (

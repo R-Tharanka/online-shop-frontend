@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import AuthLayout from "../../components/Auth/AuthLayout";
-import AuthField from "../../components/Auth/AuthField";
-import { useAuth } from "../../components/Auth/AuthProvider";
+import AuthLayout from "../../Components/Auth/AuthLayout";
+import AuthField from "../../Components/Auth/AuthField";
+import { useAuth } from "../../Components/Auth/AuthProvider";
 
 export default function Login() {
   const navigate = useNavigate();

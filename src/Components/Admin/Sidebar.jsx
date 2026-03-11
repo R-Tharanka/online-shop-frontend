@@ -1,4 +1,5 @@
-const PRODUCT_API_BASE = "http://localhost:5002/api/products";
+const PRODUCT_API_BASE =
+  import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
 const TOP_NAV_HEIGHT = 80;
 
 export default function Sidebar({ activeSection = "products", onSelect, apiBase, isOpen = false, onClose }) {

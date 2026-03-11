@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthLayout from "../../components/Auth/AuthLayout";
-import AuthField from "../../components/Auth/AuthField";
-import { useAuth } from "../../components/Auth/AuthProvider";
+import AuthLayout from "../../Components/Auth/AuthLayout";
+import AuthField from "../../Components/Auth/AuthField";
+import { useAuth } from "../../Components/Auth/AuthProvider";
 
 export default function ForgotPassword() {
   const { requestPasswordReset } = useAuth();
