@@ -1,19 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-import AboutUs from './pages/marketing/aboutUs';
-
-import Cart from './pages/orders/Cart';
-import Checkout from './pages/orders/Checkout';
-import OrderDetails from './pages/orders/OrderDetails';
-import ContactUs from './pages/marketing/contactUs';
-
-import AdminDashboard from './pages/admin/AdminDashboard';
-import ProductUserItem from './pages/products/ProductUserItem';
-import ProductUserDescription from './pages/products/ProductUserDescription';
-import { Login, Register, ForgotPassword, ResetPassword, Profile } from './pages/auth';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
-import TopNav from './components/Navigation/TopNav';
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { ForgotPassword, Login, Profile, Register, ResetPassword } from "./pages/auth";
+import ContactUs from "./pages/marketing/contactUs";
+import AboutUs from "./pages/marketing/aboutUs";
+import Cart from "./pages/orders/Cart";
+import Checkout from "./pages/orders/Checkout";
+import OrderDetails from "./pages/orders/OrderDetails";
+import ProductUserDescription from "./pages/products/ProductUserDescription";
+import ProductUserItem from "./pages/products/ProductUserItem";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import TopNav from "./components/Navigation/TopNav";
 
 function App() {
   return (
@@ -22,7 +20,6 @@ function App() {
 
       <main className="min-h-screen bg-gray-50">
         <Routes>
-
           <Route path="/" element={<Navigate to="/products" replace />} />
 
           {/* Product routes */}
@@ -50,7 +47,6 @@ function App() {
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/products" replace />} />
-
         </Routes>
       </main>
     </Router>
