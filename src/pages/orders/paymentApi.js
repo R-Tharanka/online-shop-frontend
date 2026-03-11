@@ -18,10 +18,15 @@ async function parseResponse(res) {
 }
 
 export async function createStripeCheckoutSession({ items }) {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
   const res = await fetch(`${PAYMENT_BASE}/payments/stripe/create-checkout-session`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items }),
+    body: JSON.stringify({
+      items,
+      successUrl: `${origin}/order-details?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${origin}/checkout?canceled=1`,
+    }),
   });
   return parseResponse(res);
 }
