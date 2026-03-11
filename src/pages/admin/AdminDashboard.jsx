@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Sidebar from "../../components/Admin/Sidebar";
-import StatsBar from "../../components/ProductService/StatsBar";
-import ProductCard from "../../components/ProductService/ProductCard";
-import ProductForm from "../../components/ProductService/ProductForm";
-import ConfirmModal from "../../components/ProductService/ConfirmModal";
-import Toast from "../../components/ProductService/Toast";
-import UserManagement from "../../components/Admin/UserManagement";
-import AdminOrders from "../../components/Admin/AdminOrders";
-import { getTokens } from "../../components/Auth/authStorage";
-import * as authApi from "../../components/Auth/authApi";
+import Sidebar from "../../Components/Admin/Sidebar";
+import StatsBar from "../../Components/ProductService/StatsBar";
+import ProductCard from "../../Components/ProductService/ProductCard";
+import ProductForm from "../../Components/ProductService/ProductForm";
+import ConfirmModal from "../../Components/ProductService/ConfirmModal";
+import Toast from "../../Components/ProductService/Toast";
+import UserManagement from "../../Components/Admin/UserManagement";
+import AdminOrders from "../../Components/Admin/AdminOrders";
+import { getTokens } from "../../Components/Auth/authStorage";
+import * as authApi from "../../Components/Auth/authApi";
 import menuIcon from "../../assets/menu.png";
 
 const PRODUCT_API_BASE = "http://localhost:5002/api/products";
