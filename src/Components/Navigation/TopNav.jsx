@@ -64,11 +64,15 @@ export default function TopNav() {
 
         <div className="hidden md:flex flex-1 justify-center">
           <nav className="flex flex-wrap items-center gap-2">
-            <NavLink to="/products">Products</NavLink>
-            <NavLink to="/cart">Cart</NavLink>
-            <NavLink to="/checkout">Checkout</NavLink>
-            <NavLink to="/order-details">Orders</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
+            {!isAdminView ? (
+              <>
+                <NavLink to="/products">Products</NavLink>
+                <NavLink to="/cart">Cart</NavLink>
+                <NavLink to="/checkout">Checkout</NavLink>
+                <NavLink to="/order-details">Orders</NavLink>
+                <NavLink to="/contact">Contact</NavLink>
+              </>
+            ) : null}
             {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
             {!isAuthenticated ? (
               <>
