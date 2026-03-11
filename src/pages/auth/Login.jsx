@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import AuthLayout from "../../Components/Auth/AuthLayout";
-import AuthField from "../../Components/Auth/AuthField";
-import { useAuth } from "../../Components/Auth/AuthProvider";
+import AuthLayout from "../../components/Auth/AuthLayout";
+import AuthField from "../../components/Auth/AuthField";
+import { useAuth } from "../../components/Auth/AuthProvider";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -23,7 +23,15 @@ export default function Login() {
       const user = await login({ email, password });
       const roles = Array.isArray(user?.roles) ? user.roles : [];
       const isAdmin = roles.includes("shop_owner");
-      navigate(isAdmin ? "/admin" : from, { replace: true });
+
+      if (isAdmin) {
+        navigate("/admin", { replace: true });
+      } else {
+        // Prevent regular users from being sent to role-restricted routes
+        // they were redirected from (e.g. admin was previously logged in on this device).
+        const isRestrictedFrom = from.startsWith("/admin");
+        navigate(isRestrictedFrom ? "/products" : from, { replace: true });
+      }
     } catch (err) {
       setError(err?.message || "Login failed");
     } finally {
