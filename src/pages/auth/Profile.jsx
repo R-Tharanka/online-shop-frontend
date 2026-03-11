@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../Components/Auth/AuthProvider";
+import { useAuth } from "../../components/Auth/AuthProvider";
 
 export default function Profile() {
   const { user, logout } = useAuth();
