@@ -33,7 +33,7 @@ function NavButton({ onClick, children }) {
 }
 
 export default function TopNav() {
-  const { isAuthenticated, logout, hasRole, user } = useAuth();
+  const { isAuthenticated, logout, hasRole, user, authReady } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
   const isAdminView = isAuthenticated && canAccessAdmin;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -75,7 +75,7 @@ export default function TopNav() {
         </div>
 
         <div className="hidden md:flex flex-1 justify-center">
-          <nav className="flex flex-wrap items-center gap-2">
+          <nav className={`flex flex-wrap items-center gap-2 ${!authReady ? "invisible" : ""}`}>
             {isAdminView ? (
               <>
                 <NavLink to="/admin">Dashboard</NavLink>
