@@ -1,19 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-import AboutUs from './pages/marketing/AboutUs';
-
-import Cart from './pages/orders/Cart';
-import Checkout from './pages/orders/Checkout';
-import OrderDetails from './pages/orders/OrderDetails';
-import ContactUs from './pages/marketing/contactUs';
-
-import AdminDashboard from './pages/admin/AdminDashboard';
-import ProductUserItem from './pages/products/ProductUserItem';
-import ProductUserDescription from './pages/products/ProductUserDescription';
-import { Login, Register, ForgotPassword, ResetPassword, Profile } from './pages/auth';
-import ProtectedRoute from './Components/Auth/ProtectedRoute';
-import TopNav from './Components/Navigation/TopNav';
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { ForgotPassword, Login, Profile, Register, ResetPassword } from "./pages/auth";
+import ContactUs from "./pages/marketing/contactUs";
+import AboutUs from "./pages/marketing/aboutUs";
+import Cart from "./pages/orders/Cart";
+import Checkout from "./pages/orders/Checkout";
+import OrderDetails from "./pages/orders/OrderDetails";
+import ProductUserDescription from "./pages/products/ProductUserDescription";
+import ProductUserItem from "./pages/products/ProductUserItem";
+import ProtectedRoute from "./Components/Auth/ProtectedRoute";
+import TopNav from "./Components/Navigation/TopNav";
 
 function App() {
   return (
@@ -22,19 +20,18 @@ function App() {
 
       <main className="min-h-screen bg-gray-50">
         <Routes>
-
-          <Route path="/" element={<ProductUserItem />} />
+          <Route path="/" element={<Navigate to="/products" replace />} />
 
           {/* Product routes */}
           <Route path="/products" element={<ProductUserItem />} />
           <Route path="/products/:id" element={<ProductUserDescription />} />
 
           {/* Admin */}
-          <Route path="/admin" element={ <ProtectedRoute roles="shop_owner"> <AdminDashboard /> </ProtectedRoute> } />
+          <Route path="/admin" element={<ProtectedRoute roles="shop_owner"> <AdminDashboard /> </ProtectedRoute>} />
 
           {/* Cart / Order flow */}
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={ <ProtectedRoute> <Checkout /> </ProtectedRoute> } />
+          <Route path="/checkout" element={<ProtectedRoute> <Checkout /> </ProtectedRoute>} />
           <Route path="/order-details" element={<OrderDetails />} />
 
           {/* Auth */}
@@ -42,7 +39,7 @@ function App() {
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot" element={<ForgotPassword />} />
           <Route path="/auth/reset" element={<ResetPassword />} />
-          <Route path="/account" element={ <ProtectedRoute> <Profile /> </ProtectedRoute> } />
+          <Route path="/account" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
 
           {/* Marketing */}
           <Route path="/about" element={<AboutUs />} />
@@ -50,7 +47,6 @@ function App() {
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/products" replace />} />
-
         </Routes>
       </main>
     </Router>

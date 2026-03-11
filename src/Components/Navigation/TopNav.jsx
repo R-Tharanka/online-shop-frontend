@@ -20,8 +20,20 @@ function NavLink({ to, children }) {
   );
 }
 
+function NavButton({ onClick, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="px-3 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent text-gray-600 hover:text-[#1f1b2e] hover:bg-gray-100"
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function TopNav() {
-  const { isAuthenticated, logout, hasRole, user } = useAuth();
+  const { isAuthenticated, logout, hasRole, user, authReady } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
   const isAdminView = isAuthenticated && canAccessAdmin;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -63,18 +75,25 @@ export default function TopNav() {
         </div>
 
         <div className="hidden md:flex flex-1 justify-center">
-          <nav className="flex flex-wrap items-center gap-2">
-            <NavLink to="/products">Products</NavLink>
-            <NavLink to="/cart">Cart</NavLink>
-            <NavLink to="/checkout">Checkout</NavLink>
-            <NavLink to="/order-details">Orders</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
-            {!isAuthenticated ? (
+          <nav className={`flex flex-wrap items-center gap-2 ${!authReady ? "invisible" : ""}`}>
+            {isAdminView ? (
               <>
-                <NavLink to="/auth/login">Sign in</NavLink>
+                <NavLink to="/admin">Dashboard</NavLink>
+                <NavLink to="/account">Account</NavLink>
+                <NavButton onClick={logout}>Sign out</NavButton>
               </>
-            ) : null}
+            ) : (
+              <>
+                <NavLink to="/products">Products</NavLink>
+                <NavLink to="/cart">Cart</NavLink>
+                <NavLink to="/checkout">Checkout</NavLink>
+                <NavLink to="/order-details">Orders</NavLink>
+                <NavLink to="/contact">Contact</NavLink>
+                {!isAuthenticated ? (
+                  <NavLink to="/auth/login">Sign in</NavLink>
+                ) : null}
+              </>
+            )}
           </nav>
         </div>
 
