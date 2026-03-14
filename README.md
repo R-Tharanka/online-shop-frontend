@@ -62,3 +62,4 @@ npm run lint     # eslint
 - `src/Components/Auth` - auth provider, API helpers, storage
 - `src/Components/Navigation` - top navigation
 - `src/pages` - feature pages (auth, products, orders, admin, marketing)
+
