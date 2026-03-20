@@ -10,7 +10,7 @@ import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
 import menuIcon from "../../assets/menu.png";
 
-const PRODUCT_API_BASE = "http://localhost:5002/api/products";
+const PRODUCT_API_BASE = "https://veloura-product-service-ctse-assignment01-production.up.railway.app";
 const AUTH_BASE_URL =
   import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
 const CONTACT_API_BASE =

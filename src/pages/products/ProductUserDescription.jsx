@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const API_BASE = "http://localhost:5002/api/products";
+const API_BASE = "https://veloura-product-service-ctse-assignment01-production.up.railway.app";
 
 export default function ProductUserDescription() {
   const { id } = useParams();
