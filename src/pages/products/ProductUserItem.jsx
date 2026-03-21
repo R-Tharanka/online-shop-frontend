@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
 
+const getProductSortTimestamp = (product) => {
+  const createdTime = product?.createdAt ? new Date(product.createdAt).getTime() : 0;
+  if (Number.isFinite(createdTime) && createdTime > 0) return createdTime;
+
+  // Fallback for MongoDB ObjectId ordering when createdAt is unavailable.
+  const idPrefix = typeof product?._id === "string" ? product._id.slice(0, 8) : "";
+  const parsed = Number.parseInt(idPrefix, 16);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const sortProductsNewestFirst = (items) =>
+  [...items].sort((a, b) => getProductSortTimestamp(b) - getProductSortTimestamp(a));
+
 export default function ProductUserItem() {
   const [products, setProducts] = useState([]);
   const [fetching, setFetching] = useState(true);
@@ -12,7 +25,7 @@ export default function ProductUserItem() {
   useEffect(() => {
     fetch(API_BASE)
       .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((data) => setProducts(sortProductsNewestFirst(Array.isArray(data) ? data : [])))
       .catch(() => setProducts([]))
       .finally(() => setFetching(false));
   }, []);
@@ -131,7 +144,7 @@ export default function ProductUserItem() {
         overflowX: "auto",
         scrollbarWidth: "none",
       }}>
-        {["All", "Women", "Men", "Kids", "Accessories", "Sale 🔥"].map((tag, i) => {
+        {/* {["All", "Women", "Men", "Kids", "Accessories", "Sale 🔥"].map((tag, i) => {
           const colors = ["#7c3aed", "#ec4899", "#3b82f6", "#10b981", "#f97316", "#ef4444"];
           return (
             <span key={tag} style={{
@@ -147,7 +160,7 @@ export default function ProductUserItem() {
               transition: "all .15s",
             }}>{tag}</span>
           );
-        })}
+        })} */}
       </div>
 
       <div style={{ padding: "28px 40px 48px" }}>
