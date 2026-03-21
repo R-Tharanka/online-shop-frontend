@@ -11,11 +11,9 @@ import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
 import menuIcon from "../../assets/menu.png";
 
-const PRODUCT_API_BASE = "http://localhost:5002/api/products";
-const AUTH_BASE_URL =
-  import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
-const CONTACT_API_BASE =
-  import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
+const PRODUCT_API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
+const AUTH_BASE_URL = import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
+const CONTACT_API_BASE = import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
 
 const initialForm = {
   productName: "",
