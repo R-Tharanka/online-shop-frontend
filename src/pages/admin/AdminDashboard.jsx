@@ -15,6 +15,19 @@ const PRODUCT_API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localh
 const AUTH_BASE_URL = import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
 const CONTACT_API_BASE = import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
 
+const getProductSortTimestamp = (product) => {
+  const createdTime = product?.createdAt ? new Date(product.createdAt).getTime() : 0;
+  if (Number.isFinite(createdTime) && createdTime > 0) return createdTime;
+
+  // Fallback for MongoDB ObjectId ordering when createdAt is unavailable.
+  const idPrefix = typeof product?._id === "string" ? product._id.slice(0, 8) : "";
+  const parsed = Number.parseInt(idPrefix, 16);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const sortProductsNewestFirst = (items) =>
+  [...items].sort((a, b) => getProductSortTimestamp(b) - getProductSortTimestamp(a));
+
 const initialForm = {
   productName: "",
   description: "",
@@ -65,7 +78,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(PRODUCT_API_BASE);
       const data = await res.json();
-      setProducts(data);
+      setProducts(sortProductsNewestFirst(Array.isArray(data) ? data : []));
     } catch {
       addToast("Failed to fetch products", "error");
     } finally {
@@ -150,16 +163,25 @@ export default function AdminDashboard() {
     if (required.some(k => !form[k])) return addToast("Please fill all required fields", "error");
     if (!Array.isArray(form.size) || form.size.length === 0) return addToast("Please select at least one size", "error");
 
+    const price = Number(form.price);
+    const stockQuantity = Number(form.stockQuantity);
+    if (!Number.isFinite(price) || price <= 0) {
+      return addToast("Price must be a positive value", "error");
+    }
+    if (!Number.isInteger(stockQuantity) || stockQuantity <= 0) {
+      return addToast("Stock quantity must be a positive whole number", "error");
+    }
+
     setLoading(true);
     try {
       // Use FormData to support file upload
       const fd = new FormData();
       fd.append("productName", form.productName);
       fd.append("description", form.description);
-      fd.append("price", Number(form.price));
+      fd.append("price", price);
       fd.append("category", form.category);
       fd.append("brand", form.brand);
-      fd.append("stockQuantity", Number(form.stockQuantity));
+      fd.append("stockQuantity", stockQuantity);
       fd.append("size", JSON.stringify(form.size));
       if (form.imageFile) {
         fd.append("image", form.imageFile);

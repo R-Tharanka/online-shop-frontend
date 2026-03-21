@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default function StatsBar({ products }) {
   const [dismissed, setDismissed] = useState(false);
+  const [showLowStockModal, setShowLowStockModal] = useState(false);
 
   const stats = {
     total: products.length,
@@ -11,67 +12,164 @@ export default function StatsBar({ products }) {
   };
 
   const lowStock = products.filter(p => p.stockQuantity <= 10);
+  const sortedLowStock = [...lowStock].sort((a, b) => a.stockQuantity - b.stockQuantity);
 
   return (
     <>
       {/* ── low stock alert ─────────────────────────────────────────────── */}
       {lowStock.length > 0 && !dismissed && (
-        <div style={{
-          background: "linear-gradient(135deg, rgba(255,247,237,0.9), rgba(255,243,224,0.9))",
-          border: "1.5px solid rgba(245,158,11,.45)",
-          borderRadius: 18,
-          padding: "16px 20px",
-          marginBottom: 20,
-          boxShadow: "0 12px 28px rgba(245,158,11,.12)",
-        }}>
-          {/* header row */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 18 }}>⚠️</span>
-              <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700,
-                color: "#b45309", letterSpacing: 1, textTransform: "uppercase",
-              }}>
-                Low Stock Alert — {lowStock.length} product{lowStock.length > 1 ? "s" : ""} need restocking
-              </span>
-            </div>
+        <div
+          onClick={() => setShowLowStockModal(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setShowLowStockModal(true);
+            }
+          }}
+          style={{
+            background: "linear-gradient(135deg, rgba(255,247,237,0.9), rgba(255,243,224,0.9))",
+            border: "1.5px solid rgba(245,158,11,.45)",
+            borderRadius: 18,
+            padding: "14px 18px",
+            marginBottom: 20,
+            boxShadow: "0 12px 28px rgba(245,158,11,.12)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 14,
+            cursor: "pointer",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 18 }}>⚠️</span>
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700,
+              color: "#b45309", letterSpacing: 1, textTransform: "uppercase",
+            }}>
+              Low Stock Alert: {lowStock.length} product{lowStock.length > 1 ? "s" : ""} need restocking
+            </span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              color: "#92400e",
+              background: "rgba(255,255,255,.8)",
+              border: "1px solid rgba(245,158,11,.35)",
+              borderRadius: 999,
+              padding: "4px 10px",
+              whiteSpace: "nowrap",
+            }}>
+              View details
+            </span>
             <button
-              onClick={() => setDismissed(true)}
+              onClick={(event) => {
+                event.stopPropagation();
+                setDismissed(true);
+              }}
               style={{
                 background: "transparent", border: "none", cursor: "pointer",
                 fontSize: 16, color: "#b45309", opacity: 0.6, lineHeight: 1,
               }}
+              aria-label="Dismiss low stock alert"
             >✕</button>
           </div>
+        </div>
+      )}
 
-          {/* alert rows */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-            {lowStock.map(p => (
-              <div key={p._id} style={{
-                display: "flex", alignItems: "center", gap: 10,
-                background: "rgba(255,255,255,.8)", borderRadius: 10,
-                padding: "9px 14px", border: "1px solid rgba(253,230,138,.9)",
-              }}>
-                <span style={{ fontSize: 14 }}>
-                  {p.stockQuantity === 0 ? "🔴" : "🟡"}
-                </span>
-                <span style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 11,
-                  color: "#78350f", flex: 1,
-                }}>
-                  <strong style={{ color: "#92400e" }}>ID:</strong> {p._id}
-                  <span style={{ margin: "0 8px", opacity: 0.4 }}>|</span>
-                  <strong style={{ color: "#92400e" }}>{p.productName}</strong>
-                  <span style={{ margin: "0 8px", opacity: 0.4 }}>|</span>
-                  Stock:{" "}
-                  <strong style={{ color: p.stockQuantity === 0 ? "#ef4444" : "#f59e0b" }}>
-                    {p.stockQuantity}
-                  </strong>
-                  <span style={{ margin: "0 8px", opacity: 0.4 }}>—</span>
-                  <span style={{ color: "#b45309", fontStyle: "italic" }}>Please restock.</span>
-                </span>
-              </div>
-            ))}
+      {showLowStockModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(10, 0, 20, .62)",
+            backdropFilter: "blur(5px)",
+            zIndex: 1100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+          onClick={() => setShowLowStockModal(false)}
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              width: "min(920px, 100%)",
+              maxHeight: "85vh",
+              overflow: "auto",
+              background: "#fff",
+              borderRadius: 18,
+              border: "1px solid rgba(31,27,46,.08)",
+              boxShadow: "0 24px 70px rgba(31,27,46,.22)",
+              padding: "20px 20px 18px",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+              <h3 style={{ margin: 0, fontFamily: "'Playfair Display', serif", color: "#1a002e", fontSize: 26 }}>
+                Low Stock Products
+              </h3>
+              <button
+                onClick={() => setShowLowStockModal(false)}
+                style={{
+                  border: "1.5px solid rgba(31,27,46,.16)",
+                  background: "#fff",
+                  borderRadius: 10,
+                  padding: "6px 10px",
+                  cursor: "pointer",
+                  fontSize: 12,
+                }}
+              >
+                Close
+              </button>
+            </div>
+
+            <p style={{ fontSize: 12, color: "#6b7280", marginTop: 0, marginBottom: 14 }}>
+              {sortedLowStock.length} product{sortedLowStock.length > 1 ? "s" : ""} currently have 10 or fewer units.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {sortedLowStock.map((product) => (
+                <div
+                  key={product._id}
+                  style={{
+                    border: "1px solid rgba(31,27,46,.08)",
+                    borderRadius: 12,
+                    padding: "12px 14px",
+                    background: "rgba(250,250,252,.95)",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#1f1b2e" }}>
+                        {product.productName}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>
+                        {product.brand} • {product.category}
+                      </div>
+                    </div>
+                    <div style={{
+                      fontSize: 11,
+                      color: product.stockQuantity === 0 ? "#ef4444" : "#b45309",
+                      background: product.stockQuantity === 0 ? "#fef2f2" : "#fffbeb",
+                      border: product.stockQuantity === 0 ? "1px solid rgba(239,68,68,.25)" : "1px solid rgba(245,158,11,.35)",
+                      borderRadius: 999,
+                      padding: "5px 10px",
+                      whiteSpace: "nowrap",
+                    }}>
+                      {product.stockQuantity === 0 ? "Out of stock" : `${product.stockQuantity} in stock`}
+                    </div>
+                  </div>
+
+                  <p style={{ margin: "10px 0 0", fontSize: 12, color: "#4b5563", lineHeight: 1.5 }}>
+                    {product.description || "No description available."}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -81,7 +179,7 @@ export default function StatsBar({ products }) {
         {[
           { label: "Total Products", value: stats.total, icon: "📦", color: "#8200db" },
           { label: "In Stock", value: stats.inStock, icon: "✅", color: "#22c55e" },
-          { label: "Catalogue Value", value: `$${stats.totalValue.toLocaleString("en", { maximumFractionDigits: 0 })}`, icon: "💰", color: "#f59e0b" },
+          { label: "Catalogue Value", value: `Rs ${stats.totalValue.toLocaleString("en", { maximumFractionDigits: 0 })}`, icon: "💰", color: "#f59e0b" },
           { label: "Categories", value: stats.categories, icon: "🏷️", color: "#3b82f6" },
         ].map(s => (
           <div key={s.label} style={{
