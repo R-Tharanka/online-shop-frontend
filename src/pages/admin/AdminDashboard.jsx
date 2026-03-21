@@ -6,15 +6,14 @@ import ProductForm from "../../Components/ProductService/ProductForm";
 import ConfirmModal from "../../Components/ProductService/ConfirmModal";
 import Toast from "../../Components/ProductService/Toast";
 import UserManagement from "../../Components/Admin/UserManagement";
+import AdminOrders from "../../Components/Admin/AdminOrders";
 import { getTokens } from "../../Components/Auth/authStorage";
 import * as authApi from "../../Components/Auth/authApi";
 import menuIcon from "../../assets/menu.png";
 
-const PRODUCT_API_BASE = "https://veloura-product-service-ctse-assignment01-production.up.railway.app";
-const AUTH_BASE_URL =
-  import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
-const CONTACT_API_BASE =
-  import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
+const PRODUCT_API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
+const AUTH_BASE_URL = import.meta.env.VITE_AUTH_API_BASE || "http://localhost:5000/api/auth";
+const CONTACT_API_BASE = import.meta.env.VITE_CONTACT_API_BASE || "http://localhost:3002/api/contact";
 
 const initialForm = {
   productName: "",
@@ -44,6 +43,7 @@ export default function AdminDashboard() {
   const [toasts, setToasts] = useState([]);
   const [view, setView] = useState("grid");
   const [usersTotal, setUsersTotal] = useState(null);
+  const [ordersTotal, setOrdersTotal] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messagesLoading, setMessagesLoading] = useState(false);
 
@@ -55,7 +55,7 @@ export default function AdminDashboard() {
   );
 
   const addToast = useCallback((msg, type = "success") => {
-    const id = Date.now();
+    const id = crypto.randomUUID();
     setToasts(t => [...t, { id, msg, type }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
   }, []);
@@ -241,8 +241,8 @@ export default function AdminDashboard() {
     {
       key: "orders",
       label: "Orders",
-      value: null,
-      helper: "Connect order service",
+      value: typeof ordersTotal === "number" ? ordersTotal : null,
+      helper: typeof ordersTotal === "number" ? "All customer orders" : "Order service",
     },
     {
       key: "payments",
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
       value: unresolvedMessages,
       helper: `${messages.length} total`,
     },
-  ]), [messages.length, products.length, unresolvedMessages, usersTotal]);
+  ]), [messages.length, products.length, unresolvedMessages, usersTotal, ordersTotal]);
 
   return (
     <div
@@ -310,8 +310,8 @@ export default function AdminDashboard() {
           section === "users"
             ? AUTH_BASE_URL
             : section === "messages"
-            ? CONTACT_API_BASE
-            : PRODUCT_API_BASE
+              ? CONTACT_API_BASE
+              : PRODUCT_API_BASE
         }
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -629,19 +629,7 @@ export default function AdminDashboard() {
             )}
           </div>
         ) : section === "orders" ? (
-          <div style={{
-            background: "rgba(255,255,255,0.95)",
-            borderRadius: 16,
-            padding: "24px",
-            border: "1px solid rgba(31,27,46,.08)",
-          }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, color: "#1f1b2e", marginTop: 0 }}>
-              Orders
-            </h2>
-            <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 0 }}>
-              Connect the order service to manage order fulfillment and returns.
-            </p>
-          </div>
+          <AdminOrders addToast={addToast} onTotalChange={setOrdersTotal} />
         ) : (
           <div style={{
             background: "rgba(255,255,255,0.95)",

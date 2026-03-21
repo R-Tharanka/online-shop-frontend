@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const API_BASE = "https://veloura-product-service-ctse-assignment01-production.up.railway.app";
+const API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
 
 export default function ProductUserDescription() {
   const { id } = useParams();
@@ -95,7 +95,7 @@ export default function ProductUserDescription() {
 
   if (fetching) {
     return (
-      <div style={{ minHeight:"100vh", background:"linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"'DM Sans', sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
         <div style={{ fontSize: 46, marginBottom: 16 }}>✨</div>
         <div style={{ color: "#a855f7", fontSize: 18, fontWeight: 700 }}>Loading product...</div>
       </div>
@@ -104,11 +104,11 @@ export default function ProductUserDescription() {
 
   if (!product || product.message) {
     return (
-      <div style={{ minHeight:"100vh", background:"linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"'DM Sans', sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
         <div style={{ fontSize: 46, marginBottom: 16 }}>🔍</div>
         <div style={{ color: "#e00", fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Product not found.</div>
         <span
-          style={{ cursor: "pointer", background:"linear-gradient(90deg,#7c3aed,#ec4899)", color:"#fff", padding:"10px 28px", borderRadius:50, fontWeight:700, fontSize:14, boxShadow:"0 4px 16px rgba(124,58,237,0.3)" }}
+          style={{ cursor: "pointer", background: "linear-gradient(90deg,#7c3aed,#ec4899)", color: "#fff", padding: "10px 28px", borderRadius: 50, fontWeight: 700, fontSize: 14, boxShadow: "0 4px 16px rgba(124,58,237,0.3)" }}
           onClick={() => navigate("/products")}
         >
           ← Back to Products
@@ -130,7 +130,7 @@ export default function ProductUserDescription() {
         position: "relative",
         overflow: "hidden",
       }}>
-        <div style={{ position:"absolute", top:-40, right:60, width:140, height:140, borderRadius:"50%", background:"rgba(255,255,255,0.07)", pointerEvents:"none" }} />
+        <div style={{ position: "absolute", top: -40, right: 60, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
         <button
           onClick={() => navigate("/products")}
           style={{
@@ -165,30 +165,30 @@ export default function ProductUserDescription() {
             style={{ width: "100%", height: 460, objectFit: "cover", display: "block" }}
           />
           {/* gradient overlay */}
-          <div style={{ position:"absolute", bottom:0, left:0, right:0, height:100, background:"linear-gradient(to top, rgba(124,58,237,0.35), transparent)" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 100, background: "linear-gradient(to top, rgba(124,58,237,0.35), transparent)" }} />
           {product.category && (
             <span style={{
-              position:"absolute", top:16, left:16,
+              position: "absolute", top: 16, left: 16,
               background: "linear-gradient(135deg,#7c3aed,#a855f7)",
-              color:"#fff", borderRadius:50, padding:"5px 14px",
-              fontSize:12, fontWeight:700, letterSpacing:0.5,
-              boxShadow:"0 3px 12px rgba(124,58,237,0.35)",
+              color: "#fff", borderRadius: 50, padding: "5px 14px",
+              fontSize: 12, fontWeight: 700, letterSpacing: 0.5,
+              boxShadow: "0 3px 12px rgba(124,58,237,0.35)",
             }}>{product.category}</span>
           )}
           {product.stockQuantity > 0 ? (
             <span style={{
-              position:"absolute", top:16, right:16,
+              position: "absolute", top: 16, right: 16,
               background: "linear-gradient(135deg,#10b981,#06b6d4)",
-              color:"#fff", borderRadius:50, padding:"5px 14px",
-              fontSize:11, fontWeight:700, letterSpacing:0.5,
-              boxShadow:"0 3px 12px rgba(16,185,129,0.35)",
+              color: "#fff", borderRadius: 50, padding: "5px 14px",
+              fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
+              boxShadow: "0 3px 12px rgba(16,185,129,0.35)",
             }}>IN STOCK</span>
           ) : (
             <span style={{
-              position:"absolute", top:16, right:16,
+              position: "absolute", top: 16, right: 16,
               background: "linear-gradient(135deg,#ef4444,#f97316)",
-              color:"#fff", borderRadius:50, padding:"5px 14px",
-              fontSize:11, fontWeight:700, letterSpacing:0.5,
+              color: "#fff", borderRadius: 50, padding: "5px 14px",
+              fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
             }}>SOLD OUT</span>
           )}
         </div>
@@ -197,14 +197,14 @@ export default function ProductUserDescription() {
         <div style={{ flex: 1, padding: "40px 44px", display: "flex", flexDirection: "column" }}>
 
           {/* Brand + Category pills */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap:"wrap" }}>
+          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             {product.brand && (
-              <span style={{ background:"linear-gradient(135deg,#ec4899,#f97316)", color:"#fff", borderRadius:50, padding:"4px 16px", fontSize:12, fontWeight:700, boxShadow:"0 2px 8px rgba(236,72,153,0.3)" }}>
+              <span style={{ background: "linear-gradient(135deg,#ec4899,#f97316)", color: "#fff", borderRadius: 50, padding: "4px 16px", fontSize: 12, fontWeight: 700, boxShadow: "0 2px 8px rgba(236,72,153,0.3)" }}>
                 {product.brand}
               </span>
             )}
             {product.category && (
-              <span style={{ background:"#f3e8ff", color:"#7c3aed", borderRadius:50, padding:"4px 16px", fontSize:12, fontWeight:700, border:"1.5px solid #ddd6fe" }}>
+              <span style={{ background: "#f3e8ff", color: "#7c3aed", borderRadius: 50, padding: "4px 16px", fontSize: 12, fontWeight: 700, border: "1.5px solid #ddd6fe" }}>
                 {product.category}
               </span>
             )}
@@ -226,25 +226,25 @@ export default function ProductUserDescription() {
           </div>
 
           {/* Description */}
-          <p style={{ color: "#666", fontSize: 14.5, lineHeight: 1.75, marginBottom: 20, background:"#faf5ff", borderRadius:12, padding:"14px 16px", borderLeft:"4px solid #a855f7" }}>
+          <p style={{ color: "#666", fontSize: 14.5, lineHeight: 1.75, marginBottom: 20, background: "#faf5ff", borderRadius: 12, padding: "14px 16px", borderLeft: "4px solid #a855f7" }}>
             {product.description}
           </p>
 
           {/* Stock indicator */}
           <div style={{
             marginBottom: 20, fontSize: 13, fontWeight: 700,
-            display:"inline-flex", alignItems:"center", gap:8,
+            display: "inline-flex", alignItems: "center", gap: 8,
             background: product.stockQuantity > 0 ? "#d1fae5" : "#fee2e2",
             color: product.stockQuantity > 0 ? "#065f46" : "#b91c1c",
-            borderRadius:50, padding:"6px 16px", width:"fit-content",
+            borderRadius: 50, padding: "6px 16px", width: "fit-content",
           }}>
-            <span style={{ fontSize:16 }}>{product.stockQuantity > 0 ? "✔" : "✘"}</span>
+            <span style={{ fontSize: 16 }}>{product.stockQuantity > 0 ? "✔" : "✘"}</span>
             {product.stockQuantity > 0 ? `In Stock — ${product.stockQuantity} available` : "Out of Stock"}
           </div>
 
           {/* Sizes */}
           <div style={{ marginBottom: 24 }}>
-            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize:14 }}>Select Size:</div>
+            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize: 14 }}>Select Size:</div>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {Array.isArray(product.size) && product.size.map((s) => (
                 <button
@@ -273,8 +273,8 @@ export default function ProductUserDescription() {
 
           {/* Quantity Selector */}
           <div style={{ marginBottom: 28 }}>
-            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize:14 }}>Quantity:</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 0, width: "fit-content", borderRadius: 50, overflow: "hidden", boxShadow:"0 4px 16px rgba(124,58,237,0.15)", border:"2px solid #ede9fe" }}>
+            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize: 14 }}>Quantity:</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 0, width: "fit-content", borderRadius: 50, overflow: "hidden", boxShadow: "0 4px 16px rgba(124,58,237,0.15)", border: "2px solid #ede9fe" }}>
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 disabled={quantity <= 1}
@@ -286,7 +286,7 @@ export default function ProductUserDescription() {
                   transition: "background .15s",
                 }}
               >−</button>
-              <span style={{ minWidth: 52, textAlign: "center", fontSize: 17, fontWeight: 800, color: "#1a002e", userSelect: "none", background:"#fff" }}>
+              <span style={{ minWidth: 52, textAlign: "center", fontSize: 17, fontWeight: 800, color: "#1a002e", userSelect: "none", background: "#fff" }}>
                 {quantity}
               </span>
               <button
@@ -351,9 +351,9 @@ export default function ProductUserDescription() {
           </div>
 
           {/* Trust badges */}
-          <div style={{ display:"flex", gap:16, marginTop:24, flexWrap:"wrap" }}>
-            {["🚚 Free Delivery","↩ Easy Returns","🔒 Secure Payment"].map((badge) => (
-              <span key={badge} style={{ fontSize:12, fontWeight:600, color:"#7c3aed", background:"#f5f3ff", borderRadius:50, padding:"5px 14px", border:"1px solid #ede9fe" }}>
+          <div style={{ display: "flex", gap: 16, marginTop: 24, flexWrap: "wrap" }}>
+            {["🚚 Free Delivery", "↩ Easy Returns", "🔒 Secure Payment"].map((badge) => (
+              <span key={badge} style={{ fontSize: 12, fontWeight: 600, color: "#7c3aed", background: "#f5f3ff", borderRadius: 50, padding: "5px 14px", border: "1px solid #ede9fe" }}>
                 {badge}
               </span>
             ))}

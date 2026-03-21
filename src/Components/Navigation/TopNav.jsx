@@ -20,9 +20,22 @@ function NavLink({ to, children }) {
   );
 }
 
+function NavButton({ onClick, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="px-3 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent text-gray-600 hover:text-[#1f1b2e] hover:bg-gray-100"
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function TopNav() {
-  const { isAuthenticated, logout, hasRole, user } = useAuth();
+  const { isAuthenticated, logout, hasRole, user, authReady } = useAuth();
   const canAccessAdmin = hasRole("shop_owner");
+  const isAdminView = isAuthenticated && canAccessAdmin;
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef(null);
@@ -50,7 +63,7 @@ export default function TopNav() {
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
         <div className="flex items-center">
           <Link
-            to="/"
+            to={isAdminView ? "/admin" : "/"}
             className="text-2xl font-semibold text-[#1f1b2e] tracking-tight flex items-center gap-2"
           >
             Veloura
@@ -62,25 +75,31 @@ export default function TopNav() {
         </div>
 
         <div className="hidden md:flex flex-1 justify-center">
-          <nav className="flex flex-wrap items-center gap-2">
-            <NavLink to="/products">Products</NavLink>
-            <NavLink to="/cart">Cart</NavLink>
-            <NavLink to="/checkout">Checkout</NavLink>
-            <NavLink to="/order-details">Orders</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            {canAccessAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
-            {!isAuthenticated ? (
+          <nav className={`flex flex-wrap items-center gap-2 ${!authReady ? "invisible" : ""}`}>
+            {isAdminView ? (
               <>
-                <NavLink to="/auth/login">Sign in</NavLink>
-                <NavLink to="/auth/register">Join</NavLink>
+                <NavLink to="/admin">Dashboard</NavLink>
+                <NavLink to="/account">Account</NavLink>
+                <NavButton onClick={logout}>Sign out</NavButton>
               </>
-            ) : null}
+            ) : (
+              <>
+                <NavLink to="/products">Products</NavLink>
+                <NavLink to="/cart">Cart</NavLink>
+                <NavLink to="/checkout">Checkout</NavLink>
+                <NavLink to="/order-details">Orders</NavLink>
+                <NavLink to="/contact">Contact</NavLink>
+                {!isAuthenticated ? (
+                  <NavLink to="/auth/login">Sign in</NavLink>
+                ) : null}
+              </>
+            )}
           </nav>
         </div>
 
         <div className="ml-auto flex items-center gap-2">
           {isAuthenticated ? (
-            <div className="hidden md:flex items-center gap-8">
+            <div className={`${isAdminView ? "flex" : "hidden md:flex"} items-center gap-8`}>
               <button
                 type="button"
                 onClick={handleNavClick}
@@ -141,7 +160,7 @@ export default function TopNav() {
             </div>
           ) : null}
 
-          {isAuthenticated ? (
+          {isAuthenticated && !isAdminView ? (
             <button
               type="button"
               onClick={handleNavClick}
@@ -165,19 +184,21 @@ export default function TopNav() {
             </button>
           ) : null}
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="md:hidden inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation"
-          >
-            Menu
-          </button>
+          {!isAdminView ? (
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="md:hidden inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              aria-expanded={menuOpen}
+              aria-label="Toggle navigation"
+            >
+              Menu
+            </button>
+          ) : null}
         </div>
       </div>
 
-      {menuOpen ? (
+      {menuOpen && !isAdminView ? (
         <div className="md:hidden border-t border-gray-100 bg-white/95">
           <nav className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-2">
             <div onClick={handleNavClick}><NavLink to="/products">Products</NavLink></div>
@@ -205,7 +226,6 @@ export default function TopNav() {
             ) : (
               <>
                 <div onClick={handleNavClick}><NavLink to="/auth/login">Sign in</NavLink></div>
-                <div onClick={handleNavClick}><NavLink to="/auth/register">Join</NavLink></div>
               </>
             )}
           </nav>
