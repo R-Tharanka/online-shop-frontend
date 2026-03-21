@@ -95,175 +95,165 @@ export default function ProductUserDescription() {
 
   if (fetching) {
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
-        <div style={{ fontSize: 46, marginBottom: 16 }}>✨</div>
-        <div style={{ color: "#a855f7", fontSize: 18, fontWeight: 700 }}>Loading product...</div>
+      <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}>
+        <div style={{ color: "#6b7280", fontSize: 16, fontWeight: 500 }}>Loading product...</div>
       </div>
     );
   }
 
   if (!product || product.message) {
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
-        <div style={{ fontSize: 46, marginBottom: 16 }}>🔍</div>
-        <div style={{ color: "#e00", fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Product not found.</div>
-        <span
-          style={{ cursor: "pointer", background: "linear-gradient(90deg,#7c3aed,#ec4899)", color: "#fff", padding: "10px 28px", borderRadius: 50, fontWeight: 700, fontSize: 14, boxShadow: "0 4px 16px rgba(124,58,237,0.3)" }}
+      <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}>
+        <div style={{ color: "#dc2626", fontSize: 18, fontWeight: 600, marginBottom: 12 }}>Product not found.</div>
+        <button
+          style={{ cursor: "pointer", background: "#fff", color: "#374151", padding: "10px 24px", borderRadius: 8, fontWeight: 500, fontSize: 14, border: "1px solid #e5e7eb", transition: "all .2s ease" }}
           onClick={() => navigate("/products")}
+          onMouseEnter={e => e.currentTarget.style.background = "#f3f4f6"}
+          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
         >
-          ← Back to Products
-        </span>
+          Back to Products
+        </button>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#faf5ff 0%,#f0f9ff 50%,#fdf2f8 100%)", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#f9fafb", fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif", paddingBottom: 60 }}>
 
       {/* Hero Header */}
       <div style={{
-        background: "linear-gradient(120deg, #7c3aed 0%, #a855f7 40%, #ec4899 75%, #f97316 100%)",
-        padding: "22px 40px",
+        background: "#fff",
+        borderBottom: "1px solid #e5e7eb",
+        padding: "20px 40px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        position: "relative",
-        overflow: "hidden",
       }}>
-        <div style={{ position: "absolute", top: -40, right: 60, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
         <button
           onClick={() => navigate("/products")}
           style={{
             display: "flex", alignItems: "center", gap: 8,
-            background: "rgba(255,255,255,0.18)",
-            border: "1.5px solid rgba(255,255,255,0.35)",
-            borderRadius: 50,
-            padding: "8px 20px",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 13,
+            background: "#fff",
+            border: "1px solid #e5e7eb",
+            borderRadius: 8,
+            padding: "8px 16px",
+            color: "#374151",
+            fontWeight: 500,
+            fontSize: 14,
             cursor: "pointer",
-            backdropFilter: "blur(6px)",
-            letterSpacing: 0.3,
+            transition: "all .2s ease",
           }}
+          onMouseEnter={e => e.currentTarget.style.background = "#f9fafb"}
+          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
         >
           ← Back to Products
         </button>
-        <div style={{ fontWeight: 900, fontSize: 26, color: "#fff", letterSpacing: 3, textShadow: "0 2px 12px rgba(0,0,0,0.15)" }}>
-          ✦ Veloura ✦
+        <div style={{ fontWeight: 700, fontSize: 24, color: "#111827", letterSpacing: 1 }}>
+          Veloura
         </div>
       </div>
 
       {/* Content Card */}
-      <div style={{ maxWidth: 960, margin: "40px auto 60px", background: "#fff", borderRadius: 24, boxShadow: "0 8px 48px rgba(124,58,237,0.13)", overflow: "hidden", display: "flex", flexWrap: "wrap" }}>
+      <div style={{ maxWidth: 1000, margin: "40px auto 0", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden", display: "flex", flexWrap: "wrap" }}>
 
         {/* Image Panel */}
-        <div style={{ flex: "0 0 400px", maxWidth: 400, position: "relative" }}>
-          <img
-            src={product.imageUrl || "https://placehold.co/400x460?text=No+Image"}
-            alt={product.productName}
-            style={{ width: "100%", height: 460, objectFit: "cover", display: "block" }}
-          />
-          {/* gradient overlay */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 100, background: "linear-gradient(to top, rgba(124,58,237,0.35), transparent)" }} />
+        <div style={{ flex: "0 0 440px", maxWidth: 440, position: "relative", background: "#f9fafb", borderRight: "1px solid #e5e7eb" }}>
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.productName}
+              style={{ width: "100%", height: 500, objectFit: "cover", display: "block" }}
+            />
+          ) : (
+            <div style={{ width: "100%", height: 500, display: "flex", alignItems: "center", justifyContent: "center", color: "#9ca3af" }}>No Image Available</div>
+          )}
           {product.category && (
             <span style={{
               position: "absolute", top: 16, left: 16,
-              background: "linear-gradient(135deg,#7c3aed,#a855f7)",
-              color: "#fff", borderRadius: 50, padding: "5px 14px",
-              fontSize: 12, fontWeight: 700, letterSpacing: 0.5,
-              boxShadow: "0 3px 12px rgba(124,58,237,0.35)",
+              background: "rgba(255,255,255,0.95)",
+              color: "#374151", borderRadius: 6, padding: "4px 8px",
+              fontSize: 12, fontWeight: 600, letterSpacing: 0.5,
+              border: "1px solid #e5e7eb", textTransform: "uppercase"
             }}>{product.category}</span>
           )}
           {product.stockQuantity > 0 ? (
             <span style={{
               position: "absolute", top: 16, right: 16,
-              background: "linear-gradient(135deg,#10b981,#06b6d4)",
-              color: "#fff", borderRadius: 50, padding: "5px 14px",
-              fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
-              boxShadow: "0 3px 12px rgba(16,185,129,0.35)",
-            }}>IN STOCK</span>
+              background: "#10b981",
+              color: "#fff", borderRadius: 6, padding: "4px 8px",
+              fontSize: 11, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase",
+            }}>In Stock</span>
           ) : (
             <span style={{
               position: "absolute", top: 16, right: 16,
-              background: "linear-gradient(135deg,#ef4444,#f97316)",
-              color: "#fff", borderRadius: 50, padding: "5px 14px",
-              fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
-            }}>SOLD OUT</span>
+              background: "#ef4444",
+              color: "#fff", borderRadius: 6, padding: "4px 8px",
+              fontSize: 11, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase",
+            }}>Sold Out</span>
           )}
         </div>
 
         {/* Details Panel */}
-        <div style={{ flex: 1, padding: "40px 44px", display: "flex", flexDirection: "column" }}>
+        <div style={{ flex: 1, padding: "40px 48px", display: "flex", flexDirection: "column" }}>
 
-          {/* Brand + Category pills */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-            {product.brand && (
-              <span style={{ background: "linear-gradient(135deg,#ec4899,#f97316)", color: "#fff", borderRadius: 50, padding: "4px 16px", fontSize: 12, fontWeight: 700, boxShadow: "0 2px 8px rgba(236,72,153,0.3)" }}>
-                {product.brand}
-              </span>
-            )}
-            {product.category && (
-              <span style={{ background: "#f3e8ff", color: "#7c3aed", borderRadius: 50, padding: "4px 16px", fontSize: 12, fontWeight: 700, border: "1.5px solid #ddd6fe" }}>
-                {product.category}
-              </span>
-            )}
-          </div>
+          {/* Brand */}
+          {product.brand && (
+            <div style={{ fontSize: 12, color: "#6b7280", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 8, fontWeight: 500 }}>
+              {product.brand}
+            </div>
+          )}
 
           {/* Name */}
-          <h1 style={{ margin: "0 0 10px", color: "#1a002e", fontSize: 28, fontWeight: 900, lineHeight: 1.25 }}>
+          <h1 style={{ margin: "0 0 16px", color: "#111827", fontSize: 28, fontWeight: 700, lineHeight: 1.3 }}>
             {product.productName}
           </h1>
 
           {/* Price */}
           <div style={{
-            fontSize: 28, fontWeight: 900, marginBottom: 18,
-            background: "linear-gradient(90deg,#7c3aed,#ec4899)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            display: "inline-block",
+            fontSize: 24, fontWeight: 700, marginBottom: 24,
+            color: "#1f1b2e", display: "inline-block",
           }}>
             Rs {product.price}
           </div>
 
           {/* Description */}
-          <p style={{ color: "#666", fontSize: 14.5, lineHeight: 1.75, marginBottom: 20, background: "#faf5ff", borderRadius: 12, padding: "14px 16px", borderLeft: "4px solid #a855f7" }}>
+          <p style={{ color: "#4b5563", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
             {product.description}
           </p>
 
           {/* Stock indicator */}
           <div style={{
-            marginBottom: 20, fontSize: 13, fontWeight: 700,
-            display: "inline-flex", alignItems: "center", gap: 8,
+            marginBottom: 24, fontSize: 13, fontWeight: 500,
+            display: "inline-flex", alignItems: "center", gap: 6,
             background: product.stockQuantity > 0 ? "#d1fae5" : "#fee2e2",
             color: product.stockQuantity > 0 ? "#065f46" : "#b91c1c",
-            borderRadius: 50, padding: "6px 16px", width: "fit-content",
+            borderRadius: 6, padding: "6px 12px", width: "fit-content",
           }}>
-            <span style={{ fontSize: 16 }}>{product.stockQuantity > 0 ? "✔" : "✘"}</span>
-            {product.stockQuantity > 0 ? `In Stock — ${product.stockQuantity} available` : "Out of Stock"}
+            {product.stockQuantity > 0 ? `In Stock — ${product.stockQuantity} items available` : "Out of Stock"}
           </div>
 
           {/* Sizes */}
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize: 14 }}>Select Size:</div>
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontWeight: 600, color: "#374151", marginBottom: 12, fontSize: 14 }}>Select Size:</div>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {Array.isArray(product.size) && product.size.map((s) => (
                 <button
                   key={s}
                   onClick={() => setSelectedSize(s)}
                   style={{
-                    padding: "9px 24px",
-                    borderRadius: 50,
-                    border: selectedSize === s ? "none" : "1.5px solid #ddd6fe",
-                    background: selectedSize === s
-                      ? "linear-gradient(135deg,#7c3aed,#a855f7)"
-                      : "#f5f3ff",
-                    color: selectedSize === s ? "#fff" : "#7c3aed",
-                    fontWeight: 700,
+                    padding: "8px 24px",
+                    borderRadius: 8,
+                    border: "1px solid",
+                    borderColor: selectedSize === s ? "#1f1b2e" : "#e5e7eb",
+                    background: selectedSize === s ? "#1f1b2e" : "#fff",
+                    color: selectedSize === s ? "#fff" : "#374151",
+                    fontWeight: 500,
                     fontSize: 14,
                     cursor: "pointer",
-                    transition: "all .15s",
-                    boxShadow: selectedSize === s ? "0 4px 14px rgba(124,58,237,0.35)" : "none",
+                    transition: "all .2s ease",
                   }}
+                  onMouseEnter={e => { if(selectedSize !== s) e.currentTarget.style.background = "#f9fafb" }}
+                  onMouseLeave={e => { if(selectedSize !== s) e.currentTarget.style.background = "#fff" }}
                 >
                   {s}
                 </button>
@@ -272,60 +262,59 @@ export default function ProductUserDescription() {
           </div>
 
           {/* Quantity Selector */}
-          <div style={{ marginBottom: 28 }}>
-            <div style={{ fontWeight: 800, color: "#1a002e", marginBottom: 12, fontSize: 14 }}>Quantity:</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 0, width: "fit-content", borderRadius: 50, overflow: "hidden", boxShadow: "0 4px 16px rgba(124,58,237,0.15)", border: "2px solid #ede9fe" }}>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ fontWeight: 600, color: "#374151", marginBottom: 12, fontSize: 14 }}>Quantity:</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 0, width: "fit-content", borderRadius: 8, overflow: "hidden", border: "1px solid #e5e7eb" }}>
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 disabled={quantity <= 1}
                 style={{
-                  width: 44, height: 44, fontSize: 22, fontWeight: 700,
-                  background: quantity <= 1 ? "#f5f3ff" : "linear-gradient(135deg,#7c3aed,#a855f7)",
-                  color: quantity <= 1 ? "#c4b5fd" : "#fff",
+                  width: 44, height: 44, fontSize: 20, fontWeight: 400,
+                  background: quantity <= 1 ? "#f9fafb" : "#fff",
+                  color: quantity <= 1 ? "#9ca3af" : "#374151",
                   border: "none", cursor: quantity <= 1 ? "not-allowed" : "pointer",
-                  transition: "background .15s",
+                  transition: "background .15s", borderRight: "1px solid #e5e7eb"
                 }}
               >−</button>
-              <span style={{ minWidth: 52, textAlign: "center", fontSize: 17, fontWeight: 800, color: "#1a002e", userSelect: "none", background: "#fff" }}>
+              <span style={{ minWidth: 52, textAlign: "center", fontSize: 16, fontWeight: 500, color: "#111827", userSelect: "none", background: "#fff" }}>
                 {quantity}
               </span>
               <button
                 onClick={() => setQuantity((q) => Math.min(product.stockQuantity, q + 1))}
                 disabled={quantity >= product.stockQuantity}
                 style={{
-                  width: 44, height: 44, fontSize: 22, fontWeight: 700,
-                  background: quantity >= product.stockQuantity ? "#f5f3ff" : "linear-gradient(135deg,#7c3aed,#a855f7)",
-                  color: quantity >= product.stockQuantity ? "#c4b5fd" : "#fff",
+                  width: 44, height: 44, fontSize: 20, fontWeight: 400,
+                  background: quantity >= product.stockQuantity ? "#f9fafb" : "#fff",
+                  color: quantity >= product.stockQuantity ? "#9ca3af" : "#374151",
                   border: "none", cursor: quantity >= product.stockQuantity ? "not-allowed" : "pointer",
-                  transition: "background .15s",
+                  transition: "background .15s", borderLeft: "1px solid #e5e7eb"
                 }}
               >+</button>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: "flex", gap: 14 }}>
+          <div style={{ display: "flex", gap: 16 }}>
             <button
               onClick={handleAddToCart}
               disabled={product.stockQuantity === 0}
               style={{
                 flex: 1,
                 padding: "14px 0",
-                borderRadius: 50,
-                border: addedToCart ? "none" : "2.5px solid #7c3aed",
-                background: addedToCart
-                  ? "linear-gradient(135deg,#10b981,#06b6d4)"
-                  : "#fff",
-                color: addedToCart ? "#fff" : "#7c3aed",
-                fontWeight: 800,
+                borderRadius: 8,
+                border: "1px solid",
+                borderColor: addedToCart ? "#10b981" : "#1f1b2e",
+                background: addedToCart ? "#10b981" : "#fff",
+                color: addedToCart ? "#fff" : "#1f1b2e",
+                fontWeight: 600,
                 fontSize: 15,
                 cursor: product.stockQuantity === 0 ? "not-allowed" : "pointer",
-                transition: "all .2s",
-                boxShadow: addedToCart ? "0 6px 20px rgba(16,185,129,0.35)" : "none",
-                letterSpacing: 0.3,
+                transition: "all .2s ease",
               }}
+              onMouseEnter={e => { if(!addedToCart && product.stockQuantity > 0) e.currentTarget.style.background = "#f9fafb" }}
+              onMouseLeave={e => { if(!addedToCart && product.stockQuantity > 0) e.currentTarget.style.background = "#fff" }}
             >
-              {addedToCart ? "✔ Added to Cart!" : "🛒 Add to Cart"}
+              {addedToCart ? "Added to Cart" : "Add to Cart"}
             </button>
             <button
               onClick={handleBuyNow}
@@ -333,27 +322,27 @@ export default function ProductUserDescription() {
               style={{
                 flex: 1,
                 padding: "14px 0",
-                borderRadius: 50,
+                borderRadius: 8,
                 border: "none",
-                background: product.stockQuantity === 0
-                  ? "#e5e7eb"
-                  : "linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#ec4899 100%)",
+                background: product.stockQuantity === 0 ? "#e5e7eb" : "#1f1b2e",
                 color: product.stockQuantity === 0 ? "#9ca3af" : "#fff",
-                fontWeight: 800,
+                fontWeight: 600,
                 fontSize: 15,
                 cursor: product.stockQuantity === 0 ? "not-allowed" : "pointer",
-                boxShadow: product.stockQuantity === 0 ? "none" : "0 6px 20px rgba(124,58,237,0.38)",
-                letterSpacing: 0.3,
+                transition: "all .2s ease",
               }}
+              onMouseEnter={e => { if(product.stockQuantity > 0) e.currentTarget.style.background = "#2c2740" }}
+              onMouseLeave={e => { if(product.stockQuantity > 0) e.currentTarget.style.background = "#1f1b2e" }}
             >
-              ⚡ Buy Now
+              Buy Now
             </button>
           </div>
 
           {/* Trust badges */}
-          <div style={{ display: "flex", gap: 16, marginTop: 24, flexWrap: "wrap" }}>
-            {["🚚 Free Delivery", "↩ Easy Returns", "🔒 Secure Payment"].map((badge) => (
-              <span key={badge} style={{ fontSize: 12, fontWeight: 600, color: "#7c3aed", background: "#f5f3ff", borderRadius: 50, padding: "5px 14px", border: "1px solid #ede9fe" }}>
+          <div style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", borderTop: "1px solid #e5e7eb", paddingTop: 24 }}>
+            {["Free Delivery", "Easy Returns", "Secure Payment"].map((badge) => (
+              <span key={badge} style={{ fontSize: 13, fontWeight: 500, color: "#6b7280", display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#d1d5db" }} />
                 {badge}
               </span>
             ))}
@@ -369,26 +358,20 @@ export default function ProductUserDescription() {
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 9999,
-          background: toast.type === "success"
-            ? "linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)"
-            : "linear-gradient(135deg,#ef4444,#f97316)",
+          background: toast.type === "success" ? "#10b981" : "#ef4444",
           color: "#fff",
-          padding: "16px 32px",
-          borderRadius: 50,
-          fontSize: 15,
-          fontWeight: 700,
-          boxShadow: toast.type === "success"
-            ? "0 8px 32px rgba(124,58,237,0.45)"
-            : "0 8px 32px rgba(239,68,68,0.45)",
+          padding: "12px 24px",
+          borderRadius: 8,
+          fontSize: 14,
+          fontWeight: 500,
+          boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
           display: "flex",
           alignItems: "center",
-          gap: 12,
-          letterSpacing: 0.2,
+          gap: 10,
           animation: "slideUp 0.3s ease",
           maxWidth: "90vw",
           textAlign: "center",
         }}>
-          <span style={{ fontSize: 20 }}>{toast.type === "success" ? "✔" : "✕"}</span>
           {toast.message}
         </div>
       )}
