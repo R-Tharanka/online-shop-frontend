@@ -66,15 +66,6 @@ export default function ProductCard({ product, onEdit, onDelete }) {
           </div>
         )}
 
-        <p style={{
-          fontSize: 13, color: "#4b5563",
-          lineHeight: 1.5, margin: "0 0 16px",
-          display: "-webkit-box", WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical", overflow: "hidden",
-        }}>
-          {product.description}
-        </p>
-
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
           <span style={{ fontSize: 18, color: "#1f1b2e", fontWeight: 700 }}>
             Rs {Number(product.price).toFixed(2)}
