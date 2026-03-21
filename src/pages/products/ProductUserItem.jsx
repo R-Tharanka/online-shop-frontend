@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
 
+const getProductSortTimestamp = (product) => {
+  const createdTime = product?.createdAt ? new Date(product.createdAt).getTime() : 0;
+  if (Number.isFinite(createdTime) && createdTime > 0) return createdTime;
+
+  // Fallback for MongoDB ObjectId ordering when createdAt is unavailable.
+  const idPrefix = typeof product?._id === "string" ? product._id.slice(0, 8) : "";
+  const parsed = Number.parseInt(idPrefix, 16);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const sortProductsNewestFirst = (items) =>
+  [...items].sort((a, b) => getProductSortTimestamp(b) - getProductSortTimestamp(a));
+
 export default function ProductUserItem() {
   const [products, setProducts] = useState([]);
   const [fetching, setFetching] = useState(true);
@@ -12,7 +25,7 @@ export default function ProductUserItem() {
   useEffect(() => {
     fetch(API_BASE)
       .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((data) => setProducts(sortProductsNewestFirst(Array.isArray(data) ? data : [])))
       .catch(() => setProducts([]))
       .finally(() => setFetching(false));
   }, []);
@@ -36,7 +49,7 @@ export default function ProductUserItem() {
       }}>
         {/* Subtle dot pattern */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)", backgroundSize: "32px 32px", pointerEvents: "none" }}></div>
-        
+
         <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto" }}>
           {/* Brand */}
           <div style={{
@@ -120,23 +133,23 @@ export default function ProductUserItem() {
         overflowX: "auto",
         scrollbarWidth: "none",
       }}>
-        {["All", "Women", "Men", "Kids", "Accessories", "Sale"].map((tag) => (
-          <span key={tag} style={{
-            background: "#fff",
-            color: "#374151",
-            border: "1px solid #e5e7eb",
-            borderRadius: 20,
-            padding: "8px 20px",
-            fontSize: 14,
-            fontWeight: 500,
-            whiteSpace: "nowrap",
-            cursor: "pointer",
-            transition: "all .2s ease",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#f9fafb"; e.currentTarget.style.borderColor = "#d1d5db"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "#e5e7eb"; }}
-          >{tag}</span>
-        ))}
+        {/* {["All", "Women", "Men", "Kids", "Accessories", "Sale 🔥"].map((tag, i) => {
+          const colors = ["#7c3aed", "#ec4899", "#3b82f6", "#10b981", "#f97316", "#ef4444"];
+          return (
+            <span key={tag} style={{
+              background: `${colors[i]}18`,
+              color: colors[i],
+              border: `1.5px solid ${colors[i]}40`,
+              borderRadius: 50,
+              padding: "6px 18px",
+              fontSize: 13,
+              fontWeight: 600,
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+              transition: "all .15s",
+            }}>{tag}</span>
+          );
+        })} */}
       </div>
 
       <div style={{ padding: "32px 40px 60px" }}>

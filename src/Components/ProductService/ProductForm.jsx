@@ -12,8 +12,8 @@ export default function ProductForm({ open, mode, form, onChange, onSubmit, onCl
     { key: "productName", label: "Product Name", type: "text", required: true },
     { key: "brand", label: "Brand", type: "text", required: true },
     { key: "category", label: "Category", type: "text", required: true },
-    { key: "price", label: "Price (Rs)", type: "number", required: true },
-    { key: "stockQuantity", label: "Stock Quantity", type: "number", required: true },
+    { key: "price", label: "Price (Rs)", type: "number", required: true, min: 0.01, step: 0.01 },
+    { key: "stockQuantity", label: "Stock Quantity", type: "number", required: true, min: 1, step: 1 },
   ];
 
   const inputStyle = {
@@ -53,6 +53,27 @@ export default function ProductForm({ open, mode, form, onChange, onSubmit, onCl
   };
 
   const previewSrc = form.imagePreview || form.imageUrl || null;
+
+  const handleNumericChange = (key, value) => {
+    if (value === "") {
+      onChange(key, "");
+      return;
+    }
+
+    const parsed = Number(value);
+    if (Number.isNaN(parsed)) return;
+
+    if (key === "price") {
+      if (parsed <= 0) return;
+      onChange(key, value);
+      return;
+    }
+
+    if (key === "stockQuantity") {
+      if (!Number.isInteger(parsed) || parsed <= 0) return;
+      onChange(key, String(parsed));
+    }
+  };
 
   return (
     <div style={{
@@ -153,7 +174,7 @@ export default function ProductForm({ open, mode, form, onChange, onSubmit, onCl
 
           {/* text fields grid */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 20px", marginBottom: 20 }}>
-            {textFields.map(({ key, label, type, required }) => (
+            {textFields.map(({ key, label, type, required, min, step }) => (
               <div key={key}>
                 <label style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#8200db", letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>
                   {label}{required && <span style={{ color: "#ff3a5e" }}> *</span>}
@@ -161,7 +182,15 @@ export default function ProductForm({ open, mode, form, onChange, onSubmit, onCl
                 <input
                   type={type}
                   value={form[key] || ""}
-                  onChange={e => onChange(key, e.target.value)}
+                  min={type === "number" ? min : undefined}
+                  step={type === "number" ? step : undefined}
+                  onChange={e => {
+                    if (type === "number") {
+                      handleNumericChange(key, e.target.value);
+                      return;
+                    }
+                    onChange(key, e.target.value);
+                  }}
                   style={inputStyle}
                 />
               </div>
