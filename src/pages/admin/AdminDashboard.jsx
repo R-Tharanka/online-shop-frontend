@@ -363,13 +363,17 @@ export default function AdminDashboard() {
           <div style={{ display: "flex", gap: 10 }}>
             {section === "products" && (
               <button onClick={openCreate} style={{
-                background: "linear-gradient(135deg, #1f1b2e, #5f44ff)",
-                color: "#fff", border: "none", borderRadius: 14, padding: "14px 24px",
-                cursor: "pointer", fontSize: 13, fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700, boxShadow: "0 12px 30px rgba(31,27,46,.2)",
+                background: "#1f1b2e",
+                color: "#fff", border: "none", borderRadius: 8, padding: "10px 18px",
+                cursor: "pointer", fontSize: 14, fontWeight: 500,
                 display: "flex", alignItems: "center", gap: 8,
-              }}>
-                <span style={{ fontSize: 16 }}>+</span> New Product
+                transition: "all .2s ease"
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = "#2c2740"}
+              onMouseLeave={e => e.currentTarget.style.background = "#1f1b2e"}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                New Product
               </button>
             )}
           </div>
