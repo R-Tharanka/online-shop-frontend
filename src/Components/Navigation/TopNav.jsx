@@ -60,7 +60,7 @@ export default function TopNav() {
 
   return (
     <header className="bg-white/90 backdrop-blur border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
+      <div className="w-full px-6 py-4 flex items-center justify-between">
         <div className="flex items-center">
           <Link
             to={isAdminView ? "/admin" : "/"}
@@ -97,7 +97,7 @@ export default function TopNav() {
           </nav>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-2">
           {isAuthenticated ? (
             <div className={`${isAdminView ? "flex" : "hidden md:flex"} items-center gap-8`}>
               <button
