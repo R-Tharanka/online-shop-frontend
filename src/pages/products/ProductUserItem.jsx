@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE =
-  import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
+const API_BASE = import.meta.env.VITE_PRODUCT_API_BASE || "http://localhost:5002/api/products";
 
 export default function ProductUserItem() {
   const [products, setProducts] = useState([]);
@@ -45,9 +44,9 @@ export default function ProductUserItem() {
         overflow: "hidden",
       }}>
         {/* decorative blobs */}
-        <div style={{ position:"absolute", top:-60, left:-60, width:220, height:220, borderRadius:"50%", background:"rgba(255,255,255,0.08)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", bottom:-80, right:-40, width:280, height:280, borderRadius:"50%", background:"rgba(255,255,255,0.06)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", top:20, right:80, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
+        <div style={{ position: "absolute", top: -60, left: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.08)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -80, right: -40, width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 20, right: 80, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
 
         {/* Brand */}
         <div style={{
@@ -84,7 +83,7 @@ export default function ProductUserItem() {
           backdropFilter: "blur(8px)",
         }}>
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <input
             value={search}
@@ -133,7 +132,7 @@ export default function ProductUserItem() {
         scrollbarWidth: "none",
       }}>
         {["All", "Women", "Men", "Kids", "Accessories", "Sale 🔥"].map((tag, i) => {
-          const colors = ["#7c3aed","#ec4899","#3b82f6","#10b981","#f97316","#ef4444"];
+          const colors = ["#7c3aed", "#ec4899", "#3b82f6", "#10b981", "#f97316", "#ef4444"];
           return (
             <span key={tag} style={{
               background: `${colors[i]}18`,
@@ -153,17 +152,17 @@ export default function ProductUserItem() {
 
       <div style={{ padding: "28px 40px 48px" }}>
         {/* Section heading */}
-        <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom: 28 }}>
-          <div style={{ width:5, height:30, borderRadius:4, background:"linear-gradient(180deg,#7c3aed,#ec4899)" }} />
-          <h2 style={{ margin: 0, color: "#1a002e", fontSize: 24, fontWeight: 800, letterSpacing:0.3 }}>All Products</h2>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+          <div style={{ width: 5, height: 30, borderRadius: 4, background: "linear-gradient(180deg,#7c3aed,#ec4899)" }} />
+          <h2 style={{ margin: 0, color: "#1a002e", fontSize: 24, fontWeight: 800, letterSpacing: 0.3 }}>All Products</h2>
           <span style={{
-            background:"linear-gradient(90deg,#a855f7,#ec4899)",
-            color:"#fff",
-            borderRadius:50,
-            padding:"2px 12px",
-            fontSize:12,
-            fontWeight:700,
-            marginLeft:4,
+            background: "linear-gradient(90deg,#a855f7,#ec4899)",
+            color: "#fff",
+            borderRadius: 50,
+            padding: "2px 12px",
+            fontSize: 12,
+            fontWeight: 700,
+            marginLeft: 4,
           }}>{filtered.length}</span>
         </div>
 
@@ -215,33 +214,33 @@ export default function ProductUserItem() {
                       style={{ width: "100%", height: 280, objectFit: "cover", display: "block" }}
                     />
                     <div style={{
-                      position:"absolute", bottom:0, left:0, right:0, height:60,
-                      background:"linear-gradient(to top, rgba(0,0,0,0.32), transparent)",
+                      position: "absolute", bottom: 0, left: 0, right: 0, height: 60,
+                      background: "linear-gradient(to top, rgba(0,0,0,0.32), transparent)",
                     }} />
                     {/* Category badge */}
                     {product.category && (
                       <span style={{
-                        position:"absolute", top:10, left:10,
+                        position: "absolute", top: 10, left: 10,
                         background: accent.badge,
-                        color:"#fff",
-                        borderRadius:50,
-                        padding:"3px 10px",
-                        fontSize:11,
-                        fontWeight:700,
-                        letterSpacing:0.5,
-                        boxShadow:"0 2px 8px rgba(0,0,0,0.18)",
+                        color: "#fff",
+                        borderRadius: 50,
+                        padding: "3px 10px",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: 0.5,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
                       }}>{product.category}</span>
                     )}
                     {/* New badge */}
                     <span style={{
-                      position:"absolute", top:10, right:10,
-                      background:"rgba(255,255,255,0.9)",
-                      color:"#7c3aed",
-                      borderRadius:50,
-                      padding:"3px 9px",
-                      fontSize:10,
-                      fontWeight:800,
-                      letterSpacing:0.5,
+                      position: "absolute", top: 10, right: 10,
+                      background: "rgba(255,255,255,0.9)",
+                      color: "#7c3aed",
+                      borderRadius: 50,
+                      padding: "3px 9px",
+                      fontSize: 10,
+                      fontWeight: 800,
+                      letterSpacing: 0.5,
                     }}>NEW</span>
                   </div>
 
@@ -251,14 +250,14 @@ export default function ProductUserItem() {
                     </div>
                     {product.brand && (
                       <span style={{
-                        display:"inline-block",
+                        display: "inline-block",
                         background: accent.tag,
                         color: accent.tagText,
                         borderRadius: 50,
-                        padding:"2px 9px",
-                        fontSize:11,
-                        fontWeight:700,
-                        marginBottom:6,
+                        padding: "2px 9px",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        marginBottom: 6,
                       }}>{product.brand}</span>
                     )}
                     <div style={{ fontSize: 12, color: "#999", marginBottom: 10, lineHeight: 1.5 }}>
@@ -266,13 +265,13 @@ export default function ProductUserItem() {
                         ? product.description.slice(0, 65) + "..."
                         : product.description}
                     </div>
-                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <div style={{
                         fontWeight: 800,
                         fontSize: 17,
                         background: accent.badge,
-                        WebkitBackgroundClip:"text",
-                        WebkitTextFillColor:"transparent",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
                       }}>
                         Rs {product.price}
                       </div>
@@ -281,12 +280,12 @@ export default function ProductUserItem() {
                         borderRadius: 50,
                         width: 30,
                         height: 30,
-                        display:"flex",
-                        alignItems:"center",
-                        justifyContent:"center",
-                        color:"#fff",
-                        fontSize:15,
-                        boxShadow:`0 3px 10px rgba(0,0,0,0.15)`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#fff",
+                        fontSize: 15,
+                        boxShadow: `0 3px 10px rgba(0,0,0,0.15)`,
                       }}>›</div>
                     </div>
                   </div>

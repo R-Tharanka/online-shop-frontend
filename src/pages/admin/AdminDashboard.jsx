@@ -310,8 +310,8 @@ export default function AdminDashboard() {
           section === "users"
             ? AUTH_BASE_URL
             : section === "messages"
-            ? CONTACT_API_BASE
-            : PRODUCT_API_BASE
+              ? CONTACT_API_BASE
+              : PRODUCT_API_BASE
         }
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
