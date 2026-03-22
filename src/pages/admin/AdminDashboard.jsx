@@ -487,45 +487,94 @@ export default function AdminDashboard() {
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {filtered.map(p => (
                   <div key={p._id} style={{
-                    background: "rgba(255,255,255,0.95)", borderRadius: 16, padding: "16px 20px",
-                    border: "1px solid rgba(31,27,46,.08)", display: "flex", alignItems: "center", gap: 20,
-                  }}>
+                    background: "#fff", borderRadius: 12, padding: "16px 20px",
+                    border: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 20,
+                    boxShadow: "0 1px 3px rgba(0,0,0,.05)",
+                    transition: "all .2s ease",
+                    fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 10px 25px -5px rgba(0,0,0,.05), 0 8px 10px -6px rgba(0,0,0,.01)";
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = "none";
+                    e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05)";
+                  }}
+                  >
                     <div style={{
-                      width: 52, height: 52, borderRadius: 10,
-                      background: "linear-gradient(135deg, #f3e8ff, #e8f2ff)",
+                      width: 64, height: 64, borderRadius: 8,
+                      background: "#f9fafb",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 22, flexShrink: 0, overflow: "hidden",
+                      border: "1px solid #e5e7eb", flexShrink: 0, overflow: "hidden",
                     }}>
                       {p.imageUrl
-                        ? <img src={p.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
-                        : "📦"}
+                        ? <img src={p.imageUrl} alt={p.productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
+                        : <span style={{ fontSize: 24, opacity: 0.2 }}>Image</span>}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: "#1a002e", marginBottom: 2 }}>
-                        {p.productName}
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <div style={{ fontSize: 11, color: "#6b7280", letterSpacing: 0.5, textTransform: "uppercase", fontWeight: 500 }}>
+                          {p.brand}
+                        </div>
+                        <span style={{ fontSize: 10, color: "#d1d5db" }}>•</span>
+                        <div style={{ fontSize: 11, color: "#6b7280", letterSpacing: 0.5, textTransform: "uppercase", fontWeight: 500 }}>
+                          {p.category}
+                        </div>
                       </div>
-                      <div style={{ fontSize: 11, color: "#999", marginBottom: 4 }}>{p.brand} · {p.category}</div>
+                      <h3 style={{ fontSize: 16, color: "#111827", margin: "0 0 6px", lineHeight: 1.4, fontWeight: 600 }}>
+                        {p.productName}
+                      </h3>
                       {p.size?.length > 0 && (
-                        <div style={{ display: "flex", gap: 4 }}>
+                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                           {p.size.map(s => (
                             <span key={s} style={{
-                              fontSize: 10, border: "1px solid #e0d0f7",
-                              borderRadius: 4, padding: "1px 6px", color: "#8200db",
-                              fontFamily: "'DM Mono', monospace",
+                              fontSize: 11,
+                              border: "1px solid #e5e7eb", borderRadius: 4,
+                              padding: "2px 6px", color: "#4b5563", background: "#f9fafb"
                             }}>{s}</span>
                           ))}
                         </div>
                       )}
                     </div>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#5f44ff", fontWeight: 700, minWidth: 80, textAlign: "right" }}>
-                      Rs.{Number(p.price).toFixed(2)}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, minWidth: 120 }}>
+                      <span style={{ fontSize: 18, color: "#1f1b2e", fontWeight: 700 }}>
+                        Rs {Number(p.price).toFixed(2)}
+                      </span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 500,
+                        color: p.stockQuantity > 10 ? "#059669" : p.stockQuantity > 0 ? "#d97706" : "#dc2626",
+                        background: p.stockQuantity > 10 ? "#d1fae5" : p.stockQuantity > 0 ? "#fef3c7" : "#fee2e2",
+                        padding: "4px 8px", borderRadius: 6,
+                      }}>
+                        {p.stockQuantity > 0 ? `${p.stockQuantity} in stock` : "Out of stock"}
+                      </span>
                     </div>
-                    <div style={{ fontSize: 11, color: p.stockQuantity > 0 ? "#22c55e" : "#ef4444", minWidth: 80, textAlign: "center" }}>
-                      {p.stockQuantity} units
-                    </div>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button onClick={() => openEdit(p)} style={{ padding: "7px 14px", borderRadius: 10, border: "1.5px solid rgba(95,68,255,.3)", background: "#fff", color: "#5f44ff", cursor: "pointer", fontSize: 12 }}>Edit</button>
-                      <button onClick={() => setDeleteTarget(p)} style={{ padding: "7px 14px", borderRadius: 10, border: "1.5px solid rgba(239,68,68,.3)", background: "#fff", color: "#ef4444", cursor: "pointer", fontSize: 12 }}>Delete</button>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 100 }}>
+                      <button onClick={() => openEdit(p)} style={{
+                        padding: "8px", borderRadius: 8,
+                        border: "1px solid #e5e7eb", background: "#fff",
+                        color: "#374151", cursor: "pointer",
+                        fontSize: 13, fontWeight: 500,
+                        transition: "all .15s ease", width: "100%"
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#f9fafb"}
+                      onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                      >
+                        Edit
+                      </button>
+                      <button onClick={() => setDeleteTarget(p)} style={{
+                        padding: "8px", borderRadius: 8,
+                        border: "1px solid #fee2e2", background: "#fff",
+                        color: "#dc2626", cursor: "pointer",
+                        fontSize: 13, fontWeight: 500,
+                        transition: "all .15s ease", width: "100%"
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#fef2f2"}
+                      onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 ))}
