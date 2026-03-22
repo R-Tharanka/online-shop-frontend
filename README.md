@@ -17,6 +17,20 @@ Customer-facing frontend for the Veloura online clothing store. Built with React
 - Authentication (login, register, password reset)
 - Admin dashboard for shop owners
 
+## Related Repositories
+- Frontend (this repo): https://github.com/R-Tharanka/online-shop-frontend.git
+- Auth service: https://github.com/R-Tharanka/online-clothing-auth-service.git
+- Product service: https://github.com/navogamage/Veloura-Product-Service-CTSE-Assignment01.git
+- Order service: https://github.com/GunathungaPCI/Veloura-Order-Service-Y4S1-SE-CTSE-Assignment.git
+- Payment + contact service: https://github.com/SHAKIR2001/veloura_payment_contactUs-backend.git
+
+## Deployed URLs
+- Frontend: https://online-shop-frontend-alpha.vercel.app/
+- Auth service: https://online-clothing-auth-service-production.up.railway.app/
+- Product service: https://veloura-product-service-ctse-assignment01-production.up.railway.app/
+- Order service: https://veloura-order-service-y4s1-se-ctse-assignment-production.up.railway.app/
+- Payment service: https://veloura-payment-services.onrender.com/
+
 ## Routes
 
 - `/products` - product list
@@ -33,18 +47,17 @@ Customer-facing frontend for the Veloura online clothing store. Built with React
 - `/admin` - admin dashboard (role: `shop_owner`)
 
 ## Environment
-
-API base URLs are configurable via Vite envs:
+The API base URLs are configurable via Vite envs:
 
 ```
 VITE_AUTH_API_BASE=http://localhost:5000/api/auth
+VITE_PRODUCT_API_BASE=http://localhost:5002/api/products
 VITE_ORDER_API_BASE=http://localhost:5001/api
 VITE_PAYMENT_API_BASE=http://localhost:5003/api
+VITE_CONTACT_API_BASE=http://localhost:3002/api/contact
 ```
 
-If not set, the app defaults to localhost values shown above.
-
-For hosted deployments (e.g. Vercel), set these in the Vercel project Environment Variables to point to your hosted services (Render URLs), typically ending with `/api`.
+If not set, the app uses the defaults above. For deployed environments, point these to your hosted services (for example, the Auth base would be https://online-clothing-auth-service-production.up.railway.app/api/auth).
 
 ## Scripts
 
