@@ -34,13 +34,17 @@ Customer-facing frontend for the Veloura online clothing store. Built with React
 
 ## Environment
 
-The auth API base URL is configurable via Vite envs:
+API base URLs are configurable via Vite envs:
 
 ```
 VITE_AUTH_API_BASE=http://localhost:5000/api/auth
+VITE_ORDER_API_BASE=http://localhost:5001/api
+VITE_PAYMENT_API_BASE=http://localhost:5003/api
 ```
 
-If not set, the app defaults to `http://localhost:5000/api/auth`.
+If not set, the app defaults to localhost values shown above.
+
+For hosted deployments (e.g. Vercel), set these in the Vercel project Environment Variables to point to your hosted services (Render URLs), typically ending with `/api`.
 
 ## Scripts
 
