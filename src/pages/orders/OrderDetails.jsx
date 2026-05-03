@@ -140,7 +140,7 @@ function OrderDetailView({ order, onBack, onCancel, cancellingId }) {
               className="text-xs font-medium flex items-center gap-1 mb-3 hover:underline"
               style={{ color: 'var(--color-accent)' }}
             >
-              &#8592; All Orders
+              &#8592; All orders in frontend
             </button>
           )}
           <h3 className="font-bold text-lg" style={{ color: 'var(--color-primary)' }}>Order Details</h3>
